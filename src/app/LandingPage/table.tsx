@@ -1,3 +1,6 @@
+import Link from "next/link";
+
+
 const table = () => {
   return (
     <div className="overflow-x-auto shadow-md sm:rounded-lg">
@@ -23,12 +26,12 @@ const table = () => {
         </thead>
         <tbody>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -42,12 +45,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -61,12 +64,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -80,12 +83,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -99,12 +102,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -118,12 +121,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -137,12 +140,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -156,12 +159,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -175,12 +178,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -194,12 +197,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -213,12 +216,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -232,12 +235,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -251,12 +254,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -270,12 +273,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -288,12 +291,12 @@ const table = () => {
               </a>
             </td>
           </tr><tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
@@ -307,12 +310,12 @@ const table = () => {
             </td>
           </tr>
           <tr>
-            <th
+           <Link href="/aboutPerson"> <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               Ayush patel
-            </th>
+            </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
             <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>

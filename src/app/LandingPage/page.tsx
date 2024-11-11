@@ -52,14 +52,15 @@ const LandingPage = () => {
       </form>
 
       <div className="h-20 bottom-8 right-9 fixed">
-        <Link href='/AddPerson'>
-        <button
-          type="button"
-          className="border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-5 text-center inline-flex items-center bg-blue-700 dark:border-blue-500 dark:text-white dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500 text-white"
-        >
-          Add
-          <span className="sr-only">Icon description</span>
-        </button></Link>
+        <Link href="/AddPerson">
+          <button
+            type="button"
+            className="border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-5 text-center inline-flex items-center bg-blue-700 dark:border-blue-500 dark:text-white dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500 text-white"
+          >
+            Add
+            <span className="sr-only">Icon description</span>
+          </button>
+        </Link>
       </div>
       <Table />
     </div>
