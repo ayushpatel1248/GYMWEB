@@ -49,7 +49,7 @@ const AboutPerson = () => {
             </div>
             <div className="grid grid-cols-2">
               <div className="px-4 py-2 font-semibold">Gender</div>
-              <div className="px-4 py-2">Female</div>
+              <div className="px-4 py-2">male</div>
             </div>
             <div className="grid grid-cols-2">
               <div className="px-4 py-2 font-semibold">Contact No.</div>
