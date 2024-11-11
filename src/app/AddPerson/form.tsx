@@ -1,5 +1,4 @@
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
-import { div } from "framer-motion/client";
 import Dropdown from "./dropdown";
 export default function Form() {
   return (
