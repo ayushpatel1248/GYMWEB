@@ -1,7 +1,6 @@
 import FloatingNavDemo from "../LandingPage/navbar";
 import WordPullUp from "@/components/ui/word-pull-up";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
-
 const AboutPerson = () => {
   return (
     <div>
