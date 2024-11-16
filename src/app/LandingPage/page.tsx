@@ -51,7 +51,7 @@ const LandingPage = () => {
         </div>
       </form>
 
-      <div className="h-20 bottom-8 right-9 fixed">
+      <div className="h-20 bottom-8 right-9 fixed z-40">
         <Link href="/AddPerson">
           <button
             type="button"

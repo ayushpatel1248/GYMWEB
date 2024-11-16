@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Button from "../utils/Button";
 
 
 const table = () => {
@@ -34,7 +35,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className="text-white"><Button status="paid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -53,7 +54,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-black"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -72,7 +73,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -91,7 +92,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -110,7 +111,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -129,7 +130,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -148,7 +149,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -167,7 +168,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -186,7 +187,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -205,7 +206,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -224,7 +225,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -243,7 +244,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -262,7 +263,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -281,7 +282,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -299,7 +300,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
@@ -318,7 +319,7 @@ const table = () => {
             </th></Link>
             <td className="px-6 py-4">11/12/24</td>
             <td className="px-6 py-4">400</td>
-            <td className="px-6 py-4 mb-2 bg-green-500 rounded-3xl text-white">Paid</td>
+            <td className=" text-white"><Button status="unpaid"/></td>
             <td className="px-6 py-4">
               <a
                 href="#"
