@@ -23,6 +23,11 @@ const config = {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
         },
+        'floating-points': {
+          '0%': { transform: 'translateY(0)', opacity: '1' },
+          '85%': { opacity: '0' },
+          '100%': { transform: 'translateY(-55px)', opacity: '0' },
+        },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
@@ -31,6 +36,7 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        'floating-points': 'floating-points 2s infinite ease-in-out',
       },
     },
   },
