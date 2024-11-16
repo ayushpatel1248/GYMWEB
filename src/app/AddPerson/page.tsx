@@ -2,7 +2,9 @@ import WordPullUp from "@/components/ui/word-pull-up";
 import Form from "./form";
 import FloatingNavDemo from "../LandingPage/navbar";
 
+
 const AddPerson = () => {
+
   return (
     <div>
        <FloatingNavDemo />

@@ -1,9 +1,85 @@
+"use client"; // Add this at the top of the file
+
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
-import Dropdown from "./dropdown";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { createClient } from "../../utils/supabase/client";
+import { useState } from "react";
+
 export default function Form() {
+  const supabase = createClient();
+
+  // State variables for form inputs
+  const [fullName, setFullName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [membershipPlan, setMembershipPlan] = useState("");
+  const [dateOfJoin, setDateOfJoin] = useState("");
+  const [totalFees, setTotalFees] = useState("");
+  const [feesPaid, setFeesPaid] = useState(false);
+  const [imageFile, setImageFile] = useState(null); // State to store the selected file
+
+  const handleFileChange = (event) => {
+    setImageFile(event.target.files[0]); // Save the selected file
+  };
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault(); // Prevent form from refreshing the page
+
+    try {
+      let imagePath = null;
+
+      // Upload image to Supabase Storage if a file is selected
+      if (imageFile) {
+        const { data: storageData, error: storageError } = await supabase.storage
+          .from("gymweb") // Replace with your Supabase storage bucket name
+          .upload(`images/${imageFile.name}`, imageFile);
+
+        if (storageError) {
+          console.error("Error uploading image:", storageError.message);
+          alert("Failed to upload image!");
+          return;
+        }
+
+        imagePath = storageData.path; // Get the path of the uploaded file
+      }
+
+      // Insert form data into the database
+      const { data, error } = await supabase.from("personList").insert([
+        {
+          fullName,
+          mobileNumber,
+          plan: membershipPlan,
+          doj: dateOfJoin,
+          totalfees: totalFees,
+          feesstatus: feesPaid,
+          imagePath, // Save the image path
+        },
+      ]);
+
+      if (error) {
+        console.error("Error inserting data:", error.message);
+        alert("Failed to save data!");
+      } else {
+        console.log("Data inserted successfully:", data);
+        alert("Data saved successfully!");
+        // Reset form inputs
+        setFullName("");
+        setMobileNumber("");
+        setMembershipPlan("");
+        setDateOfJoin("");
+        setTotalFees("");
+        setFeesPaid(false);
+        setImageFile(null); // Reset file input
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      alert("An unexpected error occurred!");
+    }
+  };
+
   return (
     <div className="container mt-20 mb-20">
-      <form>
+      <form onSubmit={handleFormSubmit}>
         <div className="space-y-12">
           <div>
             <h2 className="text-base/7 font-semibold text-gray-900 border bg-slate-200 text-center rounded-lg">
@@ -23,40 +99,18 @@ export default function Form() {
                     aria-hidden="true"
                     className="h-12 w-12 text-gray-300"
                   />
-                </div>
-              </div>
-
-              <div className="col-span-full">
-                <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                  <div className="text-center">
-                    <PhotoIcon
-                      aria-hidden="true"
-                      className="mx-auto h-12 w-12 text-gray-300"
-                    />
-                    <div className="mt-4 flex text-sm/6 text-gray-600">
-                      <label
-                        htmlFor="file-upload"
-                        className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                      >
-                        <span>Upload a photo</span>
-                        <input
-                          id="file-upload"
-                          name="file-upload"
-                          type="file"
-                          className="sr-only"
-                        />
-                      </label>
-                      <p className="pl-1">or drag and drop</p>
-                    </div>
-                    <p className="text-xs/5 text-gray-600">
-                      PNG, JPG, GIF up to 10MB
-                    </p>
-                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="block w-full text-sm text-gray-900"
+                  />
                 </div>
               </div>
             </div>
           </div>
 
+          {/* Personal Information Fields */}
           <div className="border-b border-gray-900/10 pb-5">
             <h2 className="text-base/7 font-semibold text-gray-900">
               Personal Information
@@ -75,7 +129,8 @@ export default function Form() {
                     id="full-name"
                     name="full-name"
                     type="text"
-                    autoComplete="given-name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   />
                 </div>
@@ -93,12 +148,40 @@ export default function Form() {
                     id="mobile-number"
                     name="mobile-number"
                     type="number"
-                    autoComplete="family-name"
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
-              <Dropdown />
+
+              <Menu as="div" className="relative inline-block text-left">
+                <div>
+                  <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    Membership Plan
+                    <ChevronDownIcon
+                      aria-hidden="true"
+                      className="-mr-1 h-5 w-5 text-gray-400"
+                    />
+                  </MenuButton>
+                </div>
+
+                <MenuItems
+                  as="div"
+                  className="absolute z-10 mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+                >
+                  {["1 Month", "3 Month", "6 Month", "12 Month"].map((plan) => (
+                    <MenuItem
+                      key={plan}
+                      as="button"
+                      className="block px-4 py-2 text-sm text-gray-700"
+                      onClick={() => setMembershipPlan(plan)}
+                    >
+                      {plan}
+                    </MenuItem>
+                  ))}
+                </MenuItems>
+              </Menu>
 
               <div className="sm:col-span-4">
                 <label
@@ -112,7 +195,8 @@ export default function Form() {
                     id="date"
                     name="date"
                     type="date"
-                    autoComplete="date"
+                    value={dateOfJoin}
+                    onChange={(e) => setDateOfJoin(e.target.value)}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   />
                 </div>
@@ -129,32 +213,27 @@ export default function Form() {
                     id="number"
                     name="number"
                     type="number"
-                    autoComplete="number"
+                    value={totalFees}
+                    onChange={(e) => setTotalFees(e.target.value)}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
               <div className="sm:col-span-4">
                 <label
-                  htmlFor="number"
+                  htmlFor="fees-paid"
                   className="block text-sm/6 font-medium text-gray-900"
                 >
                   Fees Paid or Not
                 </label>
-
                 <label className="inline-flex items-center cursor-pointer">
-                  <span className="me-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Not Paid 
-                  </span>
                   <input
                     type="checkbox"
-                    value=""
+                    checked={feesPaid}
+                    onChange={(e) => setFeesPaid(e.target.checked)}
                     className="sr-only peer"
-                  ></input>
-                  <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Paid
-                  </span>
+                  />
+                  <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600"></div>
                 </label>
               </div>
             </div>
@@ -170,7 +249,7 @@ export default function Form() {
           </button>
           <button
             type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
           >
             Save
           </button>
