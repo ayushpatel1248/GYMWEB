@@ -32,11 +32,16 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        pulse0112: {
+          '0%, 100%': { transform: 'scale(0)', opacity: '0.5' },
+          '50%': { transform: 'scale(1)', opacity: '1' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         'floating-points': 'floating-points 2s infinite ease-in-out',
+        'pulse0112': 'pulse0112 0.9s ease-in-out infinite',
       },
     },
   },
