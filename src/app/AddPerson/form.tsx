@@ -4,7 +4,7 @@ import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { createClient } from "../../utils/supabase/client";
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 export default function Form() {
   const supabase = createClient();
@@ -16,13 +16,18 @@ export default function Form() {
   const [dateOfJoin, setDateOfJoin] = useState("");
   const [totalFees, setTotalFees] = useState("");
   const [feesPaid, setFeesPaid] = useState(false);
-  const [imageFile, setImageFile] = useState(null); // State to store the selected file
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const handleFileChange = (event) => {
-    setImageFile(event.target.files[0]); // Save the selected file
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files; // Access the files property
+    if (files && files.length > 0) {
+      setImageFile(files[0]); // Save the first file
+    } else {
+      setImageFile(null); // Reset to null if no file is selected
+    }
   };
 
-  const handleFormSubmit = async (event) => {
+  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Prevent form from refreshing the page
 
     try {
@@ -30,9 +35,10 @@ export default function Form() {
 
       // Upload image to Supabase Storage if a file is selected
       if (imageFile) {
-        const { data: storageData, error: storageError } = await supabase.storage
-          .from("gymweb") // Replace with your Supabase storage bucket name
-          .upload(`images/${imageFile.name}`, imageFile);
+        const { data: storageData, error: storageError } =
+          await supabase.storage
+            .from("gymweb") // Replace with your Supabase storage bucket name
+            .upload(`images/${imageFile.name}`, imageFile);
 
         if (storageError) {
           console.error("Error uploading image:", storageError.message);
