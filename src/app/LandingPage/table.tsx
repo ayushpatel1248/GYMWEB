@@ -6,66 +6,127 @@ import { useState, useEffect } from "react";
 
 const Table = () => {
   const supabase = createClient();
-  const [data, setData] = useState<any[]>([]); // Store fetched data
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const parsePlanMonths = (planString: string): number => {
+    const matches = planString.match(/(\d+)/);
+    return matches ? parseInt(matches[0]) : 1;
+  };
+
+  const calculateRemainingDays = (doj: string, planString: string) => {
+    const joinDate = new Date(doj);
+    const monthsToAdd = parsePlanMonths(planString);
+    
+    // Get the end date
+    const membershipEndDate = new Date(joinDate);
+    
+    // Add months considering variable month lengths
+    // If the current day is 31st and next month has 30 days, it will correctly adjust
+    membershipEndDate.setMonth(membershipEndDate.getMonth() + monthsToAdd);
+    
+    // Handle edge case where joining on 31st and ending month has fewer days
+    if (joinDate.getDate() !== membershipEndDate.getDate()) {
+      // This means we've hit the edge case of e.g., Jan 31 -> Feb 28
+      // Go back to the last day of the intended month
+      membershipEndDate.setDate(2);
+    }
+    
+    // Set the time to end of day to include the full last day
+    membershipEndDate.setHours(23, 59, 59, 999);
+    
+    const currentDate = new Date();
+    
+    // Calculate remaining time in milliseconds
+    const remainingTime = membershipEndDate.getTime() - currentDate.getTime();
+    
+    // Convert to days and round up to give benefit of partial days to user
+    const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+    
+    return {
+      remainingDays,
+      endDate: membershipEndDate.toLocaleDateString()
+    };
+  };
+
+  const updateMembershipStatus = async (userId: string, remainingDays: number) => {
+    if (remainingDays <= 0) {
+      try {
+        const { error } = await supabase
+          .from("personList")
+          .update({ feesstatus: false })
+          .eq('id', userId);
+          
+        if (error) {
+          console.error("Error updating membership status:", error);
+        }
+      } catch (err) {
+        console.error("Error in updateMembershipStatus:", err);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: rows, error } = await supabase.from("personList").select("*"); // Replace with your table name
+        const { data: rows, error } = await supabase.from("personList").select("*");
         if (error) {
           console.error("Error fetching personList:", error);
           return;
         }
 
-        // Log fetched rows
-        console.log("Fetched rows:", rows);
-
         const updatedData = await Promise.all(
           rows.map(async (row) => {
+            // Calculate remaining days and end date
+            const { remainingDays, endDate } = calculateRemainingDays(row.doj, row.plan);
+            
+            // Update status if membership expired
+            await updateMembershipStatus(row.id, remainingDays);
+            
+            // Add remainingDays and endDate to row data
+            row.remainingDays = remainingDays;
+            row.membershipEndDate = endDate;
+
+            // Handle image processing
             try {
               if (row.imagePath) {
-                // Fetch the image from Supabase storage
                 const { data: imageData, error: imageError } = await supabase
                   .storage
-                  .from("gymweb") // Replace with your storage bucket
-                  .download(row.imagePath); // Assuming 'imagePath' is the column with image filenames
+                  .from("gymweb")
+                  .download(row.imagePath);
 
                 if (imageError) {
                   console.error(`Error fetching image for ${row.id}:`, imageError);
-                  row.imageUrl = ""; // Fallback for missing image
+                  row.imageUrl = "";
                 } else {
                   const imageUrl = URL.createObjectURL(imageData);
-                  row.imageUrl = imageUrl; // Set image URL
+                  row.imageUrl = imageUrl;
                 }
               } else {
-                row.imageUrl = ""; // Handle missing image path
+                row.imageUrl = "";
               }
             } catch (innerError) {
               console.error(`Error processing row ${row.id}:`, innerError);
-              row.imageUrl = ""; // Ensure fallback
+              row.imageUrl = "";
             }
 
             return row;
           })
         );
 
-        // Log the updated data with image URLs
-        console.log("Updated data:", updatedData);
-
-        setData(updatedData); // Store updated data with image URLs
+        setData(updatedData);
       } catch (err) {
         console.error("Error fetching data:", err);
       } finally {
-        setLoading(false); // Set loading to false when the fetch is done
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, []); // Empty dependency array ensures this runs only once
+  }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading indicator
+    return <div>Loading...</div>;
   }
 
   return (
@@ -73,10 +134,13 @@ const Table = () => {
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" className="px-6 py-3">Image</th> {/* New column for image */}
+            <th scope="col" className="px-6 py-3">Image</th>
             <th scope="col" className="px-6 py-3">NAME</th>
             <th scope="col" className="px-6 py-3">DOJ</th>
+            {/* <th scope="col" className="px-6 py-3">End Date</th> */}
             <th scope="col" className="px-6 py-3">Fees</th>
+            <th scope="col" className="px-6 py-3">Plan</th>
+            {/* <th scope="col" className="px-6 py-3">Remaining Days</th> */}
             <th scope="col" className="px-6 py-3">Status</th>
             <th scope="col" className="px-6 py-3">Action</th>
           </tr>
@@ -90,10 +154,10 @@ const Table = () => {
                     <img
                       src={row.imageUrl}
                       alt="User Image"
-                      className="w-10 h-10 object-cover rounded-full" // Styling the image
+                      className="w-10 h-10 object-cover rounded-full"
                     />
                   ) : (
-                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div> // Placeholder if no image
+                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
                   )}
                 </td>
                 <Link href={`/aboutPerson?${new URLSearchParams(row).toString()}`}>
@@ -105,7 +169,15 @@ const Table = () => {
                   </th>
                 </Link>
                 <td className="px-6 py-4">{row.doj}</td>
+                {/* <td className="px-6 py-4">{row.membershipEndDate}</td> */}
                 <td className="px-6 py-4">{row.totalfees}</td>
+                <td className="px-6 py-4">{row.plan}</td>
+                {/* <td className="px-6 py-4">
+                  <span className={`font-medium ${row.remainingDays <= 0 ? 'text-red-600' : 
+                    row.remainingDays <= 7 ? 'text-yellow-600' : 'text-green-600'}`}>
+                    {row.remainingDays <= 0 ? 'Expired' : `${row.remainingDays} days`}
+                  </span>
+                </td> */}
                 <td className="text-white">
                   <Button status={row.feesstatus ? "paid" : "unpaid"} />
                 </td>
@@ -121,7 +193,7 @@ const Table = () => {
             ))
           ) : (
             <tr>
-              <td colSpan={6} className="text-center px-6 py-4">
+              <td colSpan={9} className="text-center px-6 py-4">
                 No data available
               </td>
             </tr>
