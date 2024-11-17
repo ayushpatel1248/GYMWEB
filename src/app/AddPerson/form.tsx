@@ -4,7 +4,7 @@ import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { createClient } from "../../utils/supabase/client";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, useState , FormEvent} from "react";
 
 export default function Form() {
   const supabase = createClient();
