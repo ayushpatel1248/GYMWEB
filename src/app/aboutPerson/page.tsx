@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, Phone, Mail, Weight, Clock, Trophy, MapPin, User2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import profileimg from "./profileimg.jpg"
@@ -48,6 +48,7 @@ interface PaymentHistoryItem {
 
 const aboutPerson: React.FC = () => {
   // Sample user data with proper typing
+  const [param , setParam] = useState<null | any>(null)
   const user: UserData = {
     name: "John Smith",
     image:"",
@@ -115,17 +116,23 @@ const aboutPerson: React.FC = () => {
   // Type for contact items
   interface ContactItem {
     icon: React.ReactNode;
-    value: string;
+    value: string | null;
   }
 
   // Contact items array with proper typing
   const contactItems: ContactItem[] = [
-    { icon: <User2 className="w-4 h-4" />, value: user.gender.charAt(0).toUpperCase() + user.gender.slice(1) },
-    { icon: <Phone className="w-4 h-4" />, value: user.phone },
+    { icon: <User2 className="w-4 h-4" />, value: param.get("gender") },
+    { icon: <Phone className="w-4 h-4" />, value: param?.get("mobileNumber") },
     { icon: <Mail className="w-4 h-4" />, value: user.email },
     { icon: <MapPin className="w-4 h-4" />, value: user.address }
   ];
-
+  
+  useEffect(()=>{
+    const url = window.location.href;
+    const urlObj = new URL(url);
+    const params = new URLSearchParams(urlObj.search);
+    setParam(params)
+  },[])
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       {/* Header Profile Section */}
@@ -135,18 +142,18 @@ const aboutPerson: React.FC = () => {
             <CardContent className="pt-6">
               <div className={`aspect-square rounded-full overflow-hidden mb-4 border-4 transform hover:rotate-6 transition-transform duration-300 border-${user.gender === 'male' ? 'blue' : 'pink'}-500`}>
                 <img
-                  src={user.image}
-                  alt={user.name}
+                  src={param?.get("imageUrl")}
+                  alt={param?.get("imageUrl")}
                   className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                 />
               </div>
               <h2 className={`text-2xl font-bold text-center mb-2 bg-gradient-to-r ${getGenderGradient(user.gender)} bg-clip-text text-transparent`}>
-                {user.name}
+                {param?.get("fullName")}
               </h2>
               <div className="flex justify-center gap-2 text-sm">
                 <Trophy className={`w-4 h-4 ${user.gender === 'male' ? 'text-blue-500' : 'text-pink-500'} animate-pulse`} />
                 <span className={`${user.gender === 'male' ? 'text-blue-600' : 'text-pink-600'} font-medium`}>
-                  {user.membership.type} Member
+                  {param?.get("plan")} Member
                 </span>
               </div>
             </CardContent>

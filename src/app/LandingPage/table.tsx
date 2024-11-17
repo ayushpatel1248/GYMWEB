@@ -9,7 +9,6 @@ const Table = () => {
   const [data, setData] = useState<any[]>([]); // Store fetched data
   const [loading, setLoading] = useState<boolean>(true); // Loading state
 
-  // Fetch data from Supabase
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -97,7 +96,7 @@ const Table = () => {
                     <div className="w-10 h-10 bg-gray-200 rounded-full"></div> // Placeholder if no image
                   )}
                 </td>
-                <Link href={`/aboutPerson?userId=${row.id}`}>
+                <Link href={`/aboutPerson?${new URLSearchParams(row).toString()}`}>
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
