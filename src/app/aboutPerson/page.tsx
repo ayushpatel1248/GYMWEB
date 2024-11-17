@@ -41,7 +41,6 @@ interface MembershipData {
 interface UserData {
   name: string;
   image: string;
-  image: string;
   email: string;
   phone: string;
   address: string;
@@ -61,7 +60,6 @@ const aboutPerson: React.FC = () => {
   const [param, setParam] = useState<URLSearchParams | null>(null);
   const user: UserData = {
     name: "John Smith",
-    image: "",
     image: "",
     email: "john.smith@example.com",
     phone: "+1 (555) 123-4567",
@@ -134,7 +132,7 @@ const aboutPerson: React.FC = () => {
   // Contact items array with proper typing
   const contactItems: ContactItem[] = [
     // { icon: <User2 className="w-4 h-4" />, value: param.get("gender") },
-    { icon: <Phone className="w-4 h-4" />, value: param?.get("mobileNumber") },
+    { icon: <Phone className="w-4 h-4" />, value: param?.get("mobileNumber") ?? "" },
     // { icon: <Mail className="w-4 h-4" />, value: user.email },
     // { icon: <MapPin className="w-4 h-4" />, value: user.address }
   ];
