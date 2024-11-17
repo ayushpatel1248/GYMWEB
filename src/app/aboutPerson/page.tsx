@@ -31,7 +31,7 @@ interface MembershipData {
 
 interface UserData {
   name: string;
-  image:string;
+  image: string;
   email: string;
   phone: string;
   address: string;
@@ -48,10 +48,10 @@ interface PaymentHistoryItem {
 
 const aboutPerson: React.FC = () => {
   // Sample user data with proper typing
-  const [param , setParam] = useState<null | any>(null)
+  const [param, setParam] = useState<null | any>(null)
   const user: UserData = {
     name: "John Smith",
-    image:"",
+    image: "",
     email: "john.smith@example.com",
     phone: "+1 (555) 123-4567",
     address: "123 Fitness Street, Gym City",
@@ -113,7 +113,7 @@ const aboutPerson: React.FC = () => {
 
   const paymentHistory = generatePaymentHistory(user.joinDate);
 
-  // Type for contact items
+  // Type or contact items
   interface ContactItem {
     icon: React.ReactNode;
     value: string | null;
@@ -121,18 +121,18 @@ const aboutPerson: React.FC = () => {
 
   // Contact items array with proper typing
   const contactItems: ContactItem[] = [
-    { icon: <User2 className="w-4 h-4" />, value: param.get("gender") },
+    // { icon: <User2 className="w-4 h-4" />, value: param.get("gender") },
     { icon: <Phone className="w-4 h-4" />, value: param?.get("mobileNumber") },
-    { icon: <Mail className="w-4 h-4" />, value: user.email },
-    { icon: <MapPin className="w-4 h-4" />, value: user.address }
+    // { icon: <Mail className="w-4 h-4" />, value: user.email },
+    // { icon: <MapPin className="w-4 h-4" />, value: user.address }
   ];
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     const url = window.location.href;
     const urlObj = new URL(url);
     const params = new URLSearchParams(urlObj.search);
     setParam(params)
-  },[])
+  }, [])
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       {/* Header Profile Section */}
@@ -171,17 +171,17 @@ const aboutPerson: React.FC = () => {
                 <div
                   key={index}
                   className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 hover:bg-gradient-to-r ${index === 0
-                      ? user.gender === 'male'
-                        ? 'hover:from-blue-50 hover:to-blue-100'
-                        : 'hover:from-pink-50 hover:to-pink-100'
-                      : 'hover:from-purple-50 hover:to-blue-50'
+                    ? user.gender === 'male'
+                      ? 'hover:from-blue-50 hover:to-blue-100'
+                      : 'hover:from-pink-50 hover:to-pink-100'
+                    : 'hover:from-purple-50 hover:to-blue-50'
                     } group`}
                 >
                   <span className={`transition-colors duration-300 ${index === 0
-                      ? user.gender === 'male'
-                        ? 'text-blue-500 group-hover:text-blue-600'
-                        : 'text-pink-500 group-hover:text-pink-600'
-                      : 'text-purple-500 group-hover:text-purple-600'
+                    ? user.gender === 'male'
+                      ? 'text-blue-500 group-hover:text-blue-600'
+                      : 'text-pink-500 group-hover:text-pink-600'
+                    : 'text-purple-500 group-hover:text-purple-600'
                     }`}>
                     {item.icon}
                   </span>
@@ -201,7 +201,7 @@ const aboutPerson: React.FC = () => {
               <CardTitle className="text-gradient">Weight Progress</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between mb-4 p-4 rounded-lg bg-gradient-to-r from-purple-50 to-blue-50">
+              <div className="flex items-center justify-center mb-4 p-4 rounded-lg bg-gradient-to-r from-purple-50 to-blue-50">
                 <div className="text-center transform transition-all duration-300 hover:scale-105">
                   <div className="text-sm text-purple-600">Current</div>
                   <div className="text-xl font-bold flex items-center gap-2 text-purple-700">
@@ -209,12 +209,8 @@ const aboutPerson: React.FC = () => {
                     {user.weight.current} kg
                   </div>
                 </div>
-                <div className="text-center transform transition-all duration-300 hover:scale-105">
-                  <div className="text-sm text-blue-600">Goal</div>
-                  <div className="text-xl font-bold text-blue-600">{user.weight.goal} kg</div>
-                </div>
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 {user.weight.history.map((record) => (
                   <div
                     key={record.date}
@@ -224,7 +220,7 @@ const aboutPerson: React.FC = () => {
                     <span className="font-medium text-blue-600">{record.weight} kg</span>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </CardContent>
           </Card>
         </div>
@@ -233,18 +229,41 @@ const aboutPerson: React.FC = () => {
       {/* Payment History and Join Date sections remain the same... */}
       <Card className="transform transition-all duration-300 hover:shadow-xl hover:shadow-purple-100">
         <CardHeader>
-          <CardTitle className="text-gradient">Payment History</CardTitle>
+          <CardTitle className="text-gradient">Remaining Days</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {paymentHistory.map((payment, index) => {
+            {/* remaining date */}
+            <div
+              className={`p-4 rounded-lg border transition-all duration-300 transform hover:scale-105 hover:shadow-lg
+                bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-green-100`}
+                // bg-gradient-to-r from-red-50 to-rose-50 border-red-200 hover:shadow-red-100
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm text-gray-600">1</div>
+                  <div className={`font-medium text-emerald-600 `}>
+                    {/* text-rose-600 */}
+                    days remain
+                  </div>
+                </div>
+                <Calendar className={`w-5 h-5 transition-transform duration-300 hover:scale-110 ${"10" === '10'
+                  ? 'text-emerald-500'
+                  : 'text-rose-500'
+                  }`} />
+              </div>
+            </div>
+
+
+            {/* payment history */}
+            {/* {paymentHistory.map((payment, index) => {
               const formattedDate = payment.dueDate.toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
-              });
+              }); */}
 
-              return (
+            {/* return (
                 <div
                   key={index}
                   className={`p-4 rounded-lg border transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${payment.status === 'paid'
@@ -269,7 +288,7 @@ const aboutPerson: React.FC = () => {
                   </div>
                 </div>
               );
-            })}
+            })}*/}
           </div>
         </CardContent>
       </Card>
