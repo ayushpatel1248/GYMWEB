@@ -48,7 +48,7 @@ interface PaymentHistoryItem {
 
 const aboutPerson: React.FC = () => {
   // Sample user data with proper typing
-  const [param , setParam] = useState<null | any>(null)
+  const [param, setParam] = useState<URLSearchParams | null>(null);
   const user: UserData = {
     name: "John Smith",
     image:"",
@@ -121,8 +121,8 @@ const aboutPerson: React.FC = () => {
 
   // Contact items array with proper typing
   const contactItems: ContactItem[] = [
-    { icon: <User2 className="w-4 h-4" />, value: param.get("gender") },
-    { icon: <Phone className="w-4 h-4" />, value: param?.get("mobileNumber") },
+    { icon: <User2 className="w-4 h-4" />, value: param?.get("gender") ?? '' },
+    { icon: <Phone className="w-4 h-4" />, value: param?.get("mobileNumber") ?? ''},
     { icon: <Mail className="w-4 h-4" />, value: user.email },
     { icon: <MapPin className="w-4 h-4" />, value: user.address }
   ];
@@ -142,13 +142,13 @@ const aboutPerson: React.FC = () => {
             <CardContent className="pt-6">
               <div className={`aspect-square rounded-full overflow-hidden mb-4 border-4 transform hover:rotate-6 transition-transform duration-300 border-${user.gender === 'male' ? 'blue' : 'pink'}-500`}>
                 <img
-                  src={param?.get("imageUrl")}
-                  alt={param?.get("imageUrl")}
+                  src={param?.get("imageUrl") ?? ''}
+                  alt={param?.get("imageUrl") ?? ''}
                   className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                 />
               </div>
               <h2 className={`text-2xl font-bold text-center mb-2 bg-gradient-to-r ${getGenderGradient(user.gender)} bg-clip-text text-transparent`}>
-                {param?.get("fullName")}
+                {param?.get("fullName")??'anonymous'}
               </h2>
               <div className="flex justify-center gap-2 text-sm">
                 <Trophy className={`w-4 h-4 ${user.gender === 'male' ? 'text-blue-500' : 'text-pink-500'} animate-pulse`} />
