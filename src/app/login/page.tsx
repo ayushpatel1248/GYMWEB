@@ -16,7 +16,7 @@ const login = () => {
     email: string;
     password: string;
   }>({
-    email: "",
+    email: "srfitness@gmail.com",
     password: "",
   });
   const router = useRouter();

@@ -13,6 +13,11 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import profileimg from "./profileimg.jpg";
 import { StaticImageData } from "next/image";
+import { AlertTriangle } from "lucide-react";
+import { useRouter } from "next/navigation"; // Change to next/navigation
+import { createClient } from "../../utils/supabase/client";
+import { Trash2, Loader } from "lucide-react"; // Add a spinner icon (e.g., `Loader`)
+
 
 // Types and Interfaces
 type Gender = "male" | "female" | "other";
@@ -58,6 +63,7 @@ interface PaymentHistoryItem {
 const aboutPerson: React.FC = () => {
   // Sample user data with proper typing
   const [param, setParam] = useState<URLSearchParams | null>(null);
+  const router = useRouter();
   const user: UserData = {
     name: "John Smith",
     image: "",
@@ -84,6 +90,7 @@ const aboutPerson: React.FC = () => {
       ],
     },
   };
+  const supabase = createClient();
 
   // Function to get gender-specific gradient
   const getGenderGradient = (gender: Gender): string => {
@@ -132,17 +139,44 @@ const aboutPerson: React.FC = () => {
   // Contact items array with proper typing
   const contactItems: ContactItem[] = [
     // { icon: <User2 className="w-4 h-4" />, value: param.get("gender") },
-    { icon: <Phone className="w-4 h-4" />, value: param?.get("mobileNumber") ?? "" },
+    {
+      icon: <Phone className="w-4 h-4" />,
+      value: param?.get("mobileNumber") ?? "",
+    },
     // { icon: <Mail className="w-4 h-4" />, value: user.email },
     // { icon: <MapPin className="w-4 h-4" />, value: user.address }
   ];
+  const [loading, setLoading] = useState(false); // Loading state
+
+  const handleDelete = async () => {
+    setLoading(true); // Start loading
+    try {
+      const { error } = await supabase
+        .from("personList")
+        .delete()
+        .eq("id", param?.get("id"));
+
+      if (error) {
+        console.error("Error deleting user:", error);
+        alert("Failed to delete user. Please try again.");
+      } else {
+        console.log("User deleted successfully.");
+        router.push("/"); // Navigate to the home page
+      }
+    } catch (err) {
+      console.error("Error in handleDelete:", err);
+      alert("An unexpected error occurred.");
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
 
   useEffect(() => {
     const url = window.location.href;
     const urlObj = new URL(url);
     const params = new URLSearchParams(urlObj.search);
-    setParam(params)
-  }, [])
+    setParam(params);
+  }, []);
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       {/* Header Profile Section */}
@@ -204,19 +238,23 @@ const aboutPerson: React.FC = () => {
               {contactItems.map((item, index) => (
                 <div
                   key={index}
-                  className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 hover:bg-gradient-to-r ${index === 0
-                    ? user.gender === 'male'
-                      ? 'hover:from-blue-50 hover:to-blue-100'
-                      : 'hover:from-pink-50 hover:to-pink-100'
-                    : 'hover:from-purple-50 hover:to-blue-50'
-                    } group`}
+                  className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 hover:bg-gradient-to-r ${
+                    index === 0
+                      ? user.gender === "male"
+                        ? "hover:from-blue-50 hover:to-blue-100"
+                        : "hover:from-pink-50 hover:to-pink-100"
+                      : "hover:from-purple-50 hover:to-blue-50"
+                  } group`}
                 >
-                  <span className={`transition-colors duration-300 ${index === 0
-                      ? user.gender === 'male'
-                        ? 'text-blue-500 group-hover:text-blue-600'
-                        : 'text-pink-500 group-hover:text-pink-600'
-                      : 'text-purple-500 group-hover:text-purple-600'
-                    }`}>
+                  <span
+                    className={`transition-colors duration-300 ${
+                      index === 0
+                        ? user.gender === "male"
+                          ? "text-blue-500 group-hover:text-blue-600"
+                          : "text-pink-500 group-hover:text-pink-600"
+                        : "text-purple-500 group-hover:text-purple-600"
+                    }`}
+                  >
                     {item.icon}
                   </span>
                   <span className="group-hover:text-purple-700 transition-colors duration-300">
@@ -275,23 +313,25 @@ const aboutPerson: React.FC = () => {
             <div
               className={`p-4 rounded-lg border transition-all duration-300 transform hover:scale-105 hover:shadow-lg
                 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-green-100`}
-                // bg-gradient-to-r from-red-50 to-rose-50 border-red-200 hover:shadow-red-100
+              // bg-gradient-to-r from-red-50 to-rose-50 border-red-200 hover:shadow-red-100
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm text-gray-600">{param?.get("remainingDays")}</div>
+                  <div className="text-sm text-gray-600">
+                    {param?.get("remainingDays")}
+                  </div>
                   <div className={`font-medium text-emerald-600 `}>
                     {/* text-rose-600 */}
                     days remain
                   </div>
                 </div>
-                <Calendar className={`w-5 h-5 transition-transform duration-300 hover:scale-110 ${"10" === '10'
-                  ? 'text-emerald-500'
-                  : 'text-rose-500'
-                  }`} />
+                <Calendar
+                  className={`w-5 h-5 transition-transform duration-300 hover:scale-110 ${
+                    "10" === "10" ? "text-emerald-500" : "text-rose-500"
+                  }`}
+                />
               </div>
             </div>
-
 
             {/* payment history */}
             {/* {paymentHistory.map((payment, index) => {
@@ -369,6 +409,30 @@ const aboutPerson: React.FC = () => {
           -webkit-text-fill-color: transparent;
         }
       `}</style>
+      <div className="max-w-4xl mx-auto p-6">
+        {/* Delete Button */}
+        <div className="flex justify-end">
+          <button
+            onClick={handleDelete}
+            disabled={loading}
+            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            {loading ? (
+              <>
+                <Loader className="w-4 h-4 animate-spin" />
+                Deleting...
+              </>
+            ) : (
+              <>
+                <Trash2 className="w-4 h-4" />
+                Delete
+              </>
+            )}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
