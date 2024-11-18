@@ -131,7 +131,7 @@ export default function Form() {
       if (error) {
         alert("Failed to save data!");
       } else {
-        console.log("Data inserted successfully:", data);
+        // console.log("Data inserted successfully:", data);
         alert("Data saved successfully!");
         // Reset form inputs
         setFullName("");

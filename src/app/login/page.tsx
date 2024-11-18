@@ -3,22 +3,25 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ToastAction } from "../../components/ui/toast";
 import { useToast } from "../../hooks/use-toast";
-import supabase from "@/lib/supabase";
+// import supabase from "@/lib/supabase";
+import { createClient } from '@/utils/supabase/client' // Use client-side Supabase client
+
 
 // import toast
 const login = () => {
   const { toast } = useToast();
+  const supabase = createClient()
 
   const [data, setData] = useState<{
     email: string;
     password: string;
   }>({
-    email: "svfit@gmail.com",
-    password: "123456",
+    email: "",
+    password: "",
   });
   const router = useRouter();
   supabase.auth.onAuthStateChange((event, session) => {
-    console.log("resolve = ",event, session); // This will help debug session changes
+    // console.log("resolve = ",event, session); // This will help debug session changes
   });
 
   const login = async (e: React.FormEvent) => {
@@ -28,16 +31,16 @@ const login = () => {
         email: data.email,
         password: data.password,
       });
-      console.log(dataUser);
+      // console.log(dataUser);
       const check = await supabase.auth.getUser();
-      console.log("here", JSON.stringify(check));
+      // console.log("here", JSON.stringify(check));
       if (!error) {
-        console.log("inside if condition");
-        console.log(data);
+        // console.log("inside if condition");
+        // console.log(data);
         router.push("/");
       }
       if (error) {
-        console.log(error);
+        // console.log(error);
         toast({
           variant: "destructive",
           title: "oh No!",
@@ -52,7 +55,7 @@ const login = () => {
         description: `${err}`,
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
-      console.log(err);
+      // console.log(err);
     }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

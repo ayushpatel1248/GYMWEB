@@ -1,9 +1,13 @@
+"use client"
 import FloatingNavDemo from "./navbar";
 import WordPullUp from "@/components/ui/word-pull-up";
 import Table from "./table";
 import Link from "next/link";
+import { useState } from "react";
 
 const LandingPage = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <div>
       <FloatingNavDemo />

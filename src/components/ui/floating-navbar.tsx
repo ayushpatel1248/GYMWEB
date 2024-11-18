@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { createClient } from "../../utils/supabase/client";
-import {useState ,useEffect} from 'react'
+import { useState, useEffect } from "react";
+
 export const FloatingNav = ({
   navItems,
   className,
@@ -16,7 +17,6 @@ export const FloatingNav = ({
   }[];
   className?: string;
 }) => {
-  
   const [user, setUser] = useState<null | any>(null);
   const supabase = createClient();
 
@@ -24,23 +24,26 @@ export const FloatingNav = ({
     // Fetch session on component mount
     const fetchSession = async () => {
       const { data } = await supabase.auth.getUser();
-      const check = await supabase.auth.getSession()
-      console.log("here = ", JSON.stringify(check))
-      console.log("login or not")
+      const check = await supabase.auth.getSession();
+      // console.log("here = ", JSON.stringify(check))
+      // console.log("login or not")
       setUser(data?.user || null);
     };
 
     fetchSession();
   }, []);
   const handleLogout = async () => {
+
     const { error } = await supabase.auth.signOut();
     if (error) {
-      console.error('Error logging out:', error.message);
+      console.error("Error logging out:", error.message);
     } else {
       setUser(null); // Clear user state
+      window.location.reload();
+
     }
   };
-  console.log(user)
+  // console.log(user)
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -73,18 +76,26 @@ export const FloatingNav = ({
           </Link>
         ))}
         <Link href="/login">
-          <button className={`${user==null?"block":"hidden"} border text-sm font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-4 py-2 rounded-full`}>
+          <button
+            className={`${
+              user == null ? "block" : "hidden"
+            } border text-sm font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-4 py-2 rounded-full`}
+          >
             <span>Login</span>
             <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent h-px" />
           </button>
         </Link>
-          <button 
-          className={`${user==null?"hidden":"block"} border text-sm font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-4 py-2 rounded-full`}
-          onClick={(()=>{handleLogout()})}
-          >
-            <span>logout</span>
-            <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent h-px" />
-          </button>
+        <button
+          className={`${
+            user == null ? "hidden" : "block"
+          } border text-sm font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-4 py-2 rounded-full`}
+          onClick={() => {
+            handleLogout();
+          }}
+        >
+          <span>logout</span>
+          <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent h-px" />
+        </button>
       </motion.div>
     </AnimatePresence>
   );

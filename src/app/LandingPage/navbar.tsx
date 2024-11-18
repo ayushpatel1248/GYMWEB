@@ -2,6 +2,9 @@
 import React from "react";
 import { FloatingNav } from "../../components/ui/floating-navbar";
 import { IconHome, IconMessage, IconUser } from "@tabler/icons-react";
+import { createClient } from "@/utils/supabase/client";
+import { redirect } from "next/navigation";
+
 export default function FloatingNavDemo() {
   const navItems = [
     {
@@ -22,11 +25,12 @@ export default function FloatingNavDemo() {
       ),
     },
   ];
+
+  // const supabase = createClient();
+
   return (
     <div className="relative  w-full">
       <FloatingNav navItems={navItems} />
     </div>
   );
 }
-
-
