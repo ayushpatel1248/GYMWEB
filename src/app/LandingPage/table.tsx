@@ -9,6 +9,8 @@ const Table = () => {
   const supabase = createClient();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [filteredData, setFilteredData] = useState<any[]>([]); // For filtered results
+  const [searchTerm, setSearchTerm] = useState<string>(""); // Search term state
 
   const parsePlanMonths = (planString: string): number => {
     const matches = planString.match(/(\d+)/);
@@ -133,6 +135,7 @@ const Table = () => {
         });
 
         setData(updatedData);
+        setFilteredData(sortedData);
       } catch (err) {
         console.error("Error fetching data:", err);
       } finally {
@@ -142,6 +145,16 @@ const Table = () => {
 
     fetchData();
   }, []);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchValue = e.target.value.toLowerCase();
+    setSearchTerm(searchValue);
+
+    const filtered = data.filter((row) =>
+      row.fullName.toLowerCase().includes(searchValue)
+    );
+    setFilteredData(filtered);
+  };
 
   if (loading) {
     return (
@@ -153,6 +166,31 @@ const Table = () => {
 
   return (
     <div className="overflow-x-auto shadow-md sm:rounded-lg">
+      <form className="max-w-md mx-5 mb-5" onSubmit={(e) => e.preventDefault()}>
+        <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+          Search
+        </label>
+        <div className="relative">
+          <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            {/* SVG icon here */}
+          </div>
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={handleSearch}
+            id="default-search"
+            className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Search Person"
+          />
+          <button
+            type="submit"
+            className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Search
+          </button>
+        </div>
+      </form>
+
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -182,8 +220,8 @@ const Table = () => {
           </tr>
         </thead>
         <tbody>
-          {data.length > 0 ? (
-            data.map((row, index) => (
+          {filteredData.length > 0 ? (
+            filteredData.map((row, index) => (
               <tr key={index}>
                 <td className="px-6 py-4">
                   {row.imageUrl ? (
