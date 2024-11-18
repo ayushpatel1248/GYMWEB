@@ -3,6 +3,7 @@ import Link from "next/link";
 import Button from "../../utils/Button";
 import { createClient } from "../../utils/supabase/client";
 import { useState, useEffect } from "react";
+import Loader from "@/components/ui/Loader";
 
 const Table = () => {
   const supabase = createClient();
@@ -17,46 +18,49 @@ const Table = () => {
   const calculateRemainingDays = (doj: string, planString: string) => {
     const joinDate = new Date(doj);
     const monthsToAdd = parsePlanMonths(planString);
-    
+
     // Get the end date
     const membershipEndDate = new Date(joinDate);
-    
+
     // Add months considering variable month lengths
     // If the current day is 31st and next month has 30 days, it will correctly adjust
     membershipEndDate.setMonth(membershipEndDate.getMonth() + monthsToAdd);
-    
+
     // Handle edge case where joining on 31st and ending month has fewer days
     if (joinDate.getDate() !== membershipEndDate.getDate()) {
       // This means we've hit the edge case of e.g., Jan 31 -> Feb 28
       // Go back to the last day of the intended month
       membershipEndDate.setDate(2);
     }
-    
+
     // Set the time to end of day to include the full last day
     membershipEndDate.setHours(23, 59, 59, 999);
-    
+
     const currentDate = new Date();
-    
+
     // Calculate remaining time in milliseconds
     const remainingTime = membershipEndDate.getTime() - currentDate.getTime();
-    
+
     // Convert to days and round up to give benefit of partial days to user
     const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
-    
+
     return {
       remainingDays,
-      endDate: membershipEndDate.toLocaleDateString()
+      endDate: membershipEndDate.toLocaleDateString(),
     };
   };
 
-  const updateMembershipStatus = async (userId: string, remainingDays: number) => {
+  const updateMembershipStatus = async (
+    userId: string,
+    remainingDays: number
+  ) => {
     if (remainingDays <= 0) {
       try {
         const { error } = await supabase
           .from("personList")
           .update({ feesstatus: false })
-          .eq('id', userId);
-          
+          .eq("id", userId);
+
         if (error) {
           console.error("Error updating membership status:", error);
         }
@@ -69,7 +73,9 @@ const Table = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: rows, error } = await supabase.from("personList").select("*");
+        const { data: rows, error } = await supabase
+          .from("personList")
+          .select("*");
         if (error) {
           console.error("Error fetching personList:", error);
           return;
@@ -78,11 +84,14 @@ const Table = () => {
         const updatedData = await Promise.all(
           rows.map(async (row) => {
             // Calculate remaining days and end date
-            const { remainingDays, endDate } = calculateRemainingDays(row.doj, row.plan);
-            
+            const { remainingDays, endDate } = calculateRemainingDays(
+              row.doj,
+              row.plan
+            );
+
             // Update status if membership expired
             await updateMembershipStatus(row.id, remainingDays);
-            
+
             // Add remainingDays and endDate to row data
             row.remainingDays = remainingDays;
             row.membershipEndDate = endDate;
@@ -90,13 +99,14 @@ const Table = () => {
             // Handle image processing
             try {
               if (row.imagePath) {
-                const { data: imageData, error: imageError } = await supabase
-                  .storage
-                  .from("gymweb")
-                  .download(row.imagePath);
+                const { data: imageData, error: imageError } =
+                  await supabase.storage.from("gymweb").download(row.imagePath);
 
                 if (imageError) {
-                  console.error(`Error fetching image for ${row.id}:`, imageError);
+                  console.error(
+                    `Error fetching image for ${row.id}:`,
+                    imageError
+                  );
                   row.imageUrl = "";
                 } else {
                   const imageUrl = URL.createObjectURL(imageData);
@@ -113,6 +123,14 @@ const Table = () => {
             return row;
           })
         );
+        const sortedData = updatedData.sort((a, b) => {
+          if (a.feesstatus === b.feesstatus) {
+            // If status is the same, sort by name
+            return a.fullName.localeCompare(b.fullName);
+          }
+          // Put unpaid (false) before paid (true)
+          return a.feesstatus ? 1 : -1;
+        });
 
         setData(updatedData);
       } catch (err) {
@@ -126,7 +144,11 @@ const Table = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="h-[60vh] flex justify-center items-center ">
+        <Loader />
+      </div>
+    );
   }
 
   return (
@@ -134,15 +156,29 @@ const Table = () => {
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" className="px-6 py-3">Image</th>
-            <th scope="col" className="px-6 py-3">NAME</th>
-            <th scope="col" className="px-6 py-3">DOJ</th>
+            <th scope="col" className="px-6 py-3">
+              Image
+            </th>
+            <th scope="col" className="px-6 py-3">
+              NAME
+            </th>
+            <th scope="col" className="px-6 py-3">
+              DOJ
+            </th>
             {/* <th scope="col" className="px-6 py-3">End Date</th> */}
-            <th scope="col" className="px-6 py-3">Fees</th>
-            <th scope="col" className="px-6 py-3">Plan</th>
+            <th scope="col" className="px-6 py-3">
+              Fees
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Plan
+            </th>
             {/* <th scope="col" className="px-6 py-3">Remaining Days</th> */}
-            <th scope="col" className="px-6 py-3">Status</th>
-            <th scope="col" className="px-6 py-3">Action</th>
+            <th scope="col" className="px-6 py-3">
+              Status
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -160,14 +196,16 @@ const Table = () => {
                     <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
                   )}
                 </td>
-                <Link href={`/aboutPerson?${new URLSearchParams(row).toString()}`}>
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  <Link
+                    href={`/aboutPerson?${new URLSearchParams(row).toString()}`}
                   >
                     {row.fullName}
-                  </th>
-                </Link>
+                  </Link>
+                </th>
                 <td className="px-6 py-4">{row.doj}</td>
                 {/* <td className="px-6 py-4">{row.membershipEndDate}</td> */}
                 <td className="px-6 py-4">{row.totalfees}</td>
@@ -182,12 +220,12 @@ const Table = () => {
                   <Button status={row.feesstatus ? "paid" : "unpaid"} />
                 </td>
                 <td className="px-6 py-4">
-                  <a
+                  <Link
                     href="#"
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     Edit
-                  </a>
+                  </Link>
                 </td>
               </tr>
             ))

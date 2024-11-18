@@ -23,9 +23,11 @@ export const FloatingNav = ({
   useEffect(() => {
     // Fetch session on component mount
     const fetchSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data } = await supabase.auth.getUser();
+      const check = await supabase.auth.getSession()
+      console.log("here = ", JSON.stringify(check))
       console.log("login or not")
-      setUser(session?.user || null);
+      setUser(data?.user || null);
     };
 
     fetchSession();
@@ -38,6 +40,7 @@ export const FloatingNav = ({
       setUser(null); // Clear user state
     }
   };
+  console.log(user)
   return (
     <AnimatePresence mode="wait">
       <motion.div

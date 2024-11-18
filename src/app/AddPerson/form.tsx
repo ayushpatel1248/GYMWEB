@@ -1,10 +1,69 @@
-"use client"; // Add this at the top of the file
+"use client";
 
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { createClient } from "../../utils/supabase/client";
-import { ChangeEvent, useState , FormEvent} from "react";
+import { ChangeEvent, useState, FormEvent } from "react";
+
+// Function to compress image
+const compressImage = async (file: File): Promise<File> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        // Maximum dimensions
+        const MAX_WIDTH = 800;
+        const MAX_HEIGHT = 800;
+
+        // Calculate new dimensions while maintaining aspect ratio
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width = Math.round((width * MAX_HEIGHT) / height);
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        // Convert to Blob with reduced quality
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              // Create new file from blob
+              const compressedFile = new File([blob], file.name, {
+                type: "image/jpeg",
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            } else {
+              reject(new Error("Canvas to Blob conversion failed"));
+            }
+          },
+          "image/jpeg",
+          0.7 // Compression quality (0.7 = 70% quality)
+        );
+      };
+    };
+    reader.onerror = (error) => reject(error);
+  });
+};
 
 export default function Form() {
   const supabase = createClient();
@@ -17,39 +76,46 @@ export default function Form() {
   const [totalFees, setTotalFees] = useState("");
   const [feesPaid, setFeesPaid] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files; // Access the files property
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
     if (files && files.length > 0) {
-      setImageFile(files[0]); // Save the first file
+      try {
+        const compressedImage = await compressImage(files[0]);
+        setImageFile(compressedImage);
+      } catch (error) {
+        console.error("Error compressing image:", error);
+        alert("Failed to compress image!");
+      }
     } else {
-      setImageFile(null); // Reset to null if no file is selected
+      setImageFile(null);
     }
   };
 
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent form from refreshing the page
+    event.preventDefault();
+    setIsLoading(true);
 
     try {
       let imagePath = null;
 
-      // Upload image to Supabase Storage if a file is selected
       if (imageFile) {
         const { data: storageData, error: storageError } =
           await supabase.storage
-            .from("gymweb") // Replace with your Supabase storage bucket name
+            .from("gymweb")
             .upload(`images/${imageFile.name}`, imageFile);
 
         if (storageError) {
           console.error("Error uploading image:", storageError.message);
           alert("Failed to upload image!");
+          setIsLoading(false);
           return;
         }
 
-        imagePath = storageData.path; // Get the path of the uploaded file
+        imagePath = storageData.path;
       }
 
-      // Insert form data into the database
       const { data, error } = await supabase.from("personList").insert([
         {
           fullName,
@@ -58,12 +124,11 @@ export default function Form() {
           doj: dateOfJoin,
           totalfees: totalFees,
           feesstatus: feesPaid,
-          imagePath, // Save the image path
+          imagePath,
         },
       ]);
 
       if (error) {
-        console.error("Error inserting data:", error.message);
         alert("Failed to save data!");
       } else {
         console.log("Data inserted successfully:", data);
@@ -75,11 +140,13 @@ export default function Form() {
         setDateOfJoin("");
         setTotalFees("");
         setFeesPaid(false);
-        setImageFile(null); // Reset file input
+        setImageFile(null);
       }
     } catch (error) {
       console.error("Unexpected error:", error);
       alert("An unexpected error occurred!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -255,9 +322,36 @@ export default function Form() {
           </button>
           <button
             type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+            disabled={isLoading}
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Save
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Saving...
+              </span>
+            ) : (
+              "Save"
+            )}
           </button>
         </div>
       </form>

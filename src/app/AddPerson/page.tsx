@@ -10,7 +10,7 @@ const AddPerson = () => {
        <FloatingNavDemo />
         <WordPullUp
         className="text-4xl font-bold tracking-[-0.02em] text-blue-700 dark:text-white md:text-7xl md:leading-[5rem]"
-        words="SV Fitness"
+        words="SR Fitness"
       />
       <Form/>
     </div>

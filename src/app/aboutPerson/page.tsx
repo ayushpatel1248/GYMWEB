@@ -279,7 +279,7 @@ const aboutPerson: React.FC = () => {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm text-gray-600">1</div>
+                  <div className="text-sm text-gray-600">{param?.get("remainingDays")}</div>
                   <div className={`font-medium text-emerald-600 `}>
                     {/* text-rose-600 */}
                     days remain

@@ -1,14 +1,12 @@
-
-"use client"
+"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "../../utils/supabase/client";
 import { ToastAction } from "../../components/ui/toast";
 import { useToast } from "../../hooks/use-toast";
+import supabase from "@/lib/supabase";
 
 // import toast
 const login = () => {
-  const supabase = createClient();
   const { toast } = useToast();
 
   const [data, setData] = useState<{
@@ -19,8 +17,11 @@ const login = () => {
     password: "123456",
   });
   const router = useRouter();
+  supabase.auth.onAuthStateChange((event, session) => {
+    console.log("resolve = ",event, session); // This will help debug session changes
+  });
 
-  const login = async (e : React.FormEvent) => {
+  const login = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const { data: dataUser, error } = await supabase.auth.signInWithPassword({
@@ -28,6 +29,8 @@ const login = () => {
         password: data.password,
       });
       console.log(dataUser);
+      const check = await supabase.auth.getUser();
+      console.log("here", JSON.stringify(check));
       if (!error) {
         console.log("inside if condition");
         console.log(data);
@@ -60,14 +63,14 @@ const login = () => {
     }));
   };
   return (
-    <div >
+    <div>
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 mt-10">
           <a
             href="#"
             className="flex items-center mb-6 text-2xl font-semibold text-blue-700 dark:text-white"
           >
-            SV Fitness
+            SR Fitness
           </a>
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 mt-20">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
