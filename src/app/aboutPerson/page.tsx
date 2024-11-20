@@ -11,13 +11,23 @@ import {
   User2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import profileimg from "./profileimg.jpg";
 import { StaticImageData } from "next/image";
 import { AlertTriangle } from "lucide-react";
-import { useRouter } from "next/navigation"; // Change to next/navigation
+import { useRouter } from "next/navigation";
 import { createClient } from "../../utils/supabase/client";
-import { Trash2, Loader } from "lucide-react"; // Add a spinner icon (e.g., `Loader`)
-
+import { Trash2, Loader } from "lucide-react";
 
 // Types and Interfaces
 type Gender = "male" | "female" | "other";
@@ -149,7 +159,7 @@ const aboutPerson: React.FC = () => {
   const [loading, setLoading] = useState(false); // Loading state
 
   const handleDelete = async () => {
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       const { error } = await supabase
         .from("personList")
@@ -161,13 +171,13 @@ const aboutPerson: React.FC = () => {
         alert("Failed to delete user. Please try again.");
       } else {
         console.log("User deleted successfully.");
-        router.push("/"); // Navigate to the home page
+        router.push("/");
       }
     } catch (err) {
       console.error("Error in handleDelete:", err);
       alert("An unexpected error occurred.");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
@@ -410,27 +420,47 @@ const aboutPerson: React.FC = () => {
         }
       `}</style>
       <div className="max-w-4xl mx-auto p-6">
-        {/* Delete Button */}
         <div className="flex justify-end">
-          <button
-            onClick={handleDelete}
-            disabled={loading}
-            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            {loading ? (
-              <>
-                <Loader className="w-4 h-4 animate-spin" />
-                Deleting...
-              </>
-            ) : (
-              <>
-                <Trash2 className="w-4 h-4" />
-                Delete
-              </>
-            )}
-          </button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button
+                disabled={loading}
+                className={`flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                {loading ? (
+                  <>
+                    <Loader className="w-4 h-4 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                  </>
+                )}
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the
+                  member's account and remove their data from our servers.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDelete}
+                  className="bg-red-500 hover:bg-red-600 text-white"
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </div>
