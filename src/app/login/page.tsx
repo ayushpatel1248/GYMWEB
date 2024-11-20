@@ -4,13 +4,13 @@ import { useRouter } from "next/navigation";
 import { ToastAction } from "../../components/ui/toast";
 import { useToast } from "../../hooks/use-toast";
 // import supabase from "@/lib/supabase";
-import { createClient } from '@/utils/supabase/client' // Use client-side Supabase client
-
+import { createClient } from "@/utils/supabase/client"; // Use client-side Supabase client
 
 // import toast
 const login = () => {
   const { toast } = useToast();
-  const supabase = createClient()
+  const supabase = createClient();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [data, setData] = useState<{
     email: string;
@@ -26,6 +26,7 @@ const login = () => {
 
   const login = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const { data: dataUser, error } = await supabase.auth.signInWithPassword({
         email: data.email,
@@ -56,6 +57,9 @@ const login = () => {
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
       // console.log(err);
+    }
+    finally{
+      setIsLoading(false);
     }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,9 +138,10 @@ const login = () => {
                 </div>
                 <button
                   type="submit"
+                  disabled={isLoading}
                   className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 bg-blue-500"
                 >
-                  Sign in
+                  {isLoading ? <span>Signingin.....</span> : <span>Sign in</span>}
                 </button>
               </form>
             </div>
