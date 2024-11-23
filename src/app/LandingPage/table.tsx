@@ -262,7 +262,13 @@ const Table = () => {
                     href="#"
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
-                    Edit
+                    <Link
+                      href={`/EditPersonInfo?${new URLSearchParams(
+                        row
+                      ).toString()}`}
+                    >
+                      Edit
+                    </Link>
                   </Link>
                 </td>
               </tr>
