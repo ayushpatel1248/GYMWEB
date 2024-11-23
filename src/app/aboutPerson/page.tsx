@@ -288,7 +288,7 @@ const aboutPerson: React.FC = () => {
                   <div className="text-sm text-purple-600">Current</div>
                   <div className="text-xl font-bold flex items-center gap-2 text-purple-700">
                     <Weight className="w-4 h-4" />
-                    {user.weight.current} kg
+                    {param?.get("weight")} kg
                   </div>
                 </div>
               </div>

@@ -165,7 +165,7 @@ const Table = () => {
   }
 
   return (
-    <div className="overflow-x-auto shadow-md sm:rounded-lg">
+    <div>
       <form className="max-w-md mx-5 mb-5" onSubmit={(e) => e.preventDefault()}>
         <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
           Search
@@ -190,98 +190,97 @@ const Table = () => {
           </button>
         </div>
       </form>
-
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Image
-            </th>
-            <th scope="col" className="px-6 py-3">
-              NAME
-            </th>
-            <th scope="col" className="px-6 py-3">
-              DOJ
-            </th>
-            {/* <th scope="col" className="px-6 py-3">End Date</th> */}
-            <th scope="col" className="px-6 py-3">
-              Fees
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Plan
-            </th>
-            {/* <th scope="col" className="px-6 py-3">Remaining Days</th> */}
-            <th scope="col" className="px-6 py-3">
-              Status
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.length > 0 ? (
-            filteredData.map((row, index) => (
-              <tr key={index}>
-                <td className="px-6 py-4">
-                  {row.imageUrl ? (
-                    <img
-                      src={row.imageUrl}
-                      alt="User Image"
-                      className="w-10 h-10 object-cover rounded-full"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                  )}
-                </td>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  <Link
-                    href={`/aboutPerson?${new URLSearchParams(row).toString()}`}
+      <div className="overflow-x-auto shadow-md sm:rounded-lg">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                Image
+              </th>
+              <th scope="col" className="px-6 py-3">
+                NAME
+              </th>
+              <th scope="col" className="px-6 py-3">
+                DOJ
+              </th>
+              {/* <th scope="col" className="px-6 py-3">End Date</th> */}
+              <th scope="col" className="px-6 py-3">
+                Fees
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Plan
+              </th>
+              {/* <th scope="col" className="px-6 py-3">Remaining Days</th> */}
+              <th scope="col" className="px-6 py-3">
+                Status
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredData.length > 0 ? (
+              filteredData.map((row, index) => (
+                <tr key={index}>
+                  <td className="px-6 py-4">
+                    {row.imageUrl ? (
+                      <img
+                        src={row.imageUrl}
+                        alt="User Image"
+                        className="w-10 h-10 object-cover rounded-full"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                    )}
+                  </td>
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    {row.fullName}
-                  </Link>
-                </th>
-                <td className="px-6 py-4">{row.doj}</td>
-                {/* <td className="px-6 py-4">{row.membershipEndDate}</td> */}
-                <td className="px-6 py-4">{row.totalfees}</td>
-                <td className="px-6 py-4">{row.plan}</td>
-                {/* <td className="px-6 py-4">
+                    <Link
+                      href={`/aboutPerson?${new URLSearchParams(
+                        row
+                      ).toString()}`}
+                    >
+                      {row.fullName}
+                    </Link>
+                  </th>
+                  <td className="px-6 py-4">{row.doj}</td>
+                  {/* <td className="px-6 py-4">{row.membershipEndDate}</td> */}
+                  <td className="px-6 py-4">{row.totalfees}</td>
+                  <td className="px-6 py-4">{row.plan}</td>
+                  {/* <td className="px-6 py-4">
                   <span className={`font-medium ${row.remainingDays <= 0 ? 'text-red-600' : 
                     row.remainingDays <= 7 ? 'text-yellow-600' : 'text-green-600'}`}>
                     {row.remainingDays <= 0 ? 'Expired' : `${row.remainingDays} days`}
                   </span>
                 </td> */}
-                <td className="text-white">
-                  <Button status={row.feesstatus ? "paid" : "unpaid"} />
-                </td>
-                <td className="px-6 py-4">
-                  <Link
-                    href="#"
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
+                  <td className="text-white">
+                    <Button status={row.feesstatus ? "paid" : "unpaid"} />
+                  </td>
+                  <td className="px-6 py-4">
                     <Link
                       href={`/EditPersonInfo?${new URLSearchParams(
                         row
                       ).toString()}`}
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                     >
                       Edit
                     </Link>
-                  </Link>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={9} className="text-center px-6 py-4">
+                  No data available
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={9} className="text-center px-6 py-4">
-                No data available
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

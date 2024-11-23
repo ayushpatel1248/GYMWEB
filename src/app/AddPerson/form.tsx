@@ -4,7 +4,7 @@ import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { createClient } from "../../utils/supabase/client";
-import { ChangeEvent, useState, FormEvent } from "react";
+import { ChangeEvent, useState, FormEvent, useEffect } from "react";
 
 // Function to compress image
 const compressImage = async (file: File): Promise<File> => {
@@ -77,6 +77,14 @@ export default function Form() {
   const [feesPaid, setFeesPaid] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [weight, setWeight] = useState("");
+
+  // Effect to update membership plan when fees status changes
+  useEffect(() => {
+    if (!feesPaid) {
+      setMembershipPlan("0 Month");
+    }
+  }, [feesPaid]);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -120,18 +128,18 @@ export default function Form() {
         {
           fullName,
           mobileNumber,
-          plan: membershipPlan,
+          plan: !feesPaid ? "0 Month" : membershipPlan, // Ensure 0 Month is saved when fees not paid
           doj: dateOfJoin,
           totalfees: totalFees,
           feesstatus: feesPaid,
           imagePath,
+          weight
         },
       ]);
 
       if (error) {
         alert("Failed to save data!");
       } else {
-        // console.log("Data inserted successfully:", data);
         alert("Data saved successfully!");
         // Reset form inputs
         setFullName("");
@@ -141,6 +149,7 @@ export default function Form() {
         setTotalFees("");
         setFeesPaid(false);
         setImageFile(null);
+        setWeight("");
       }
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -223,6 +232,24 @@ export default function Form() {
                     type="number"
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value)}
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  />
+                </div>
+              </div>
+              <div className="sm:col-span-3">
+                <label
+                  htmlFor="weight"
+                  className="block text-sm/6 font-medium text-gray-900"
+                >
+                  Weight
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="weight"
+                    name="weight"
+                    type="number"
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   />
                 </div>
