@@ -28,6 +28,8 @@ import { AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createClient } from "../../utils/supabase/client";
 import { Trash2, Loader } from "lucide-react";
+import FloatingNavDemo from "../LandingPage/navbar";
+import WordPullUp from "@/components/ui/word-pull-up";
 
 // Types and Interfaces
 type Gender = "male" | "female" | "other";
@@ -188,7 +190,13 @@ const aboutPerson: React.FC = () => {
     setParam(params);
   }, []);
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <>
+    <FloatingNavDemo/>
+    <WordPullUp
+        className="text-4xl font-bold tracking-[-0.02em] text-blue-700 dark:text-white md:text-7xl md:leading-[5rem]"
+        words="SR Fitness"
+      />
+     <div className="max-w-4xl mx-auto p-6 space-y-6 mt-10">
       {/* Header Profile Section */}
       <div className="flex flex-col md:flex-row gap-6 items-start animate-fadeIn">
         <div className="w-full md:w-1/3">
@@ -464,6 +472,8 @@ const aboutPerson: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
+   
   );
 };
 
