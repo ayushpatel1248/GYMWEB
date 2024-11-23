@@ -191,116 +191,116 @@ const aboutPerson: React.FC = () => {
   }, []);
   return (
     <>
-    <FloatingNavDemo/>
-    <WordPullUp
+      <FloatingNavDemo />
+      <WordPullUp
         className="text-4xl font-bold tracking-[-0.02em] text-blue-700 dark:text-white md:text-7xl md:leading-[5rem]"
         words="SR Fitness"
       />
-     <div className="max-w-4xl mx-auto p-6 space-y-6 mt-10">
-      {/* Header Profile Section */}
-      <div className="flex flex-col md:flex-row gap-6 items-start animate-fadeIn">
-        <div className="w-full md:w-1/3">
-          <Card className="overflow-hidden transition-transform duration-300 hover:scale-105">
-            <CardContent className="pt-6">
-              <div
-                className={`aspect-square rounded-full overflow-hidden mb-4 border-4 transform hover:rotate-6 transition-transform duration-300 border-${
-                  user.gender === "male" ? "blue" : "pink"
-                }-500`}
-              >
-                <img
-                  src={
-                    param?.get("imageUrl") ??
-                    "https://imgs.search.brave.com/K7oZwf4IcDRWgZfuev8d5FGoPmysINSmEAvpHtBL3Eo/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMudW5zcGxhc2gu/Y29tL3Bob3RvLTE1/ODI3Mzg0MTE3MDYt/YmZjOGU2OTFkMWMy/P2ZtPWpwZyZxPTYw/Jnc9MzAwMCZpeGxp/Yj1yYi00LjAuMyZp/eGlkPU0zd3hNakEz/ZkRCOE1IeGxlSEJz/YjNKbExXWmxaV1I4/TVRoOGZIeGxibnd3/Zkh4OGZIdz0.jpeg"
-                  }
-                  alt={
-                    param?.get("imageUrl") ??
-                    "https://imgs.search.brave.com/K7oZwf4IcDRWgZfuev8d5FGoPmysINSmEAvpHtBL3Eo/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMudW5zcGxhc2gu/Y29tL3Bob3RvLTE1/ODI3Mzg0MTE3MDYt/YmZjOGU2OTFkMWMy/P2ZtPWpwZyZxPTYw/Jnc9MzAwMCZpeGxp/Yj1yYi00LjAuMyZp/eGlkPU0zd3hNakEz/ZkRCOE1IeGxlSEJz/YjNKbExXWmxaV1I4/TVRoOGZIeGxibnd3/Zkh4OGZIdz0.jpeg"
-                  }
-                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                />
-              </div>
-              <h2
-                className={`text-2xl font-bold text-center mb-2 bg-gradient-to-r ${getGenderGradient(
-                  user.gender
-                )} bg-clip-text text-transparent`}
-              >
-                {param?.get("fullName") ?? "anonymous"}
-              </h2>
-              <div className="flex justify-center gap-2 text-sm">
-                <Trophy
-                  className={`w-4 h-4 ${
-                    user.gender === "male" ? "text-blue-500" : "text-pink-500"
-                  } animate-pulse`}
-                />
-                <span
-                  className={`${
-                    user.gender === "male" ? "text-blue-600" : "text-pink-600"
-                  } font-medium`}
-                >
-                  {param?.get("plan")} Member
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="w-full md:w-2/3 space-y-6">
-          {/* Contact Information */}
-          <Card className="transform transition-all duration-300 hover:shadow-xl hover:shadow-purple-100">
-            <CardHeader>
-              <CardTitle className="text-gradient">
-                Contact Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {contactItems.map((item, index) => (
+      <div className="max-w-4xl mx-auto p-6 space-y-6 mt-10">
+        {/* Header Profile Section */}
+        <div className="flex flex-col md:flex-row gap-6 items-start animate-fadeIn">
+          <div className="w-full md:w-1/3">
+            <Card className="overflow-hidden transition-transform duration-300 hover:scale-105">
+              <CardContent className="pt-6">
                 <div
-                  key={index}
-                  className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 hover:bg-gradient-to-r ${
-                    index === 0
-                      ? user.gender === "male"
-                        ? "hover:from-blue-50 hover:to-blue-100"
-                        : "hover:from-pink-50 hover:to-pink-100"
-                      : "hover:from-purple-50 hover:to-blue-50"
-                  } group`}
+                  className={`aspect-square rounded-full overflow-hidden mb-4 border-4 transform hover:rotate-6 transition-transform duration-300 border-${
+                    user.gender === "male" ? "blue" : "pink"
+                  }-500`}
                 >
+                  <img
+                    src={
+                      param?.get("imageUrl") ??
+                      "https://imgs.search.brave.com/K7oZwf4IcDRWgZfuev8d5FGoPmysINSmEAvpHtBL3Eo/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMudW5zcGxhc2gu/Y29tL3Bob3RvLTE1/ODI3Mzg0MTE3MDYt/YmZjOGU2OTFkMWMy/P2ZtPWpwZyZxPTYw/Jnc9MzAwMCZpeGxp/Yj1yYi00LjAuMyZp/eGlkPU0zd3hNakEz/ZkRCOE1IeGxlSEJz/YjNKbExXWmxaV1I4/TVRoOGZIeGxibnd3/Zkh4OGZIdz0.jpeg"
+                    }
+                    alt={
+                      param?.get("imageUrl") ??
+                      "https://imgs.search.brave.com/K7oZwf4IcDRWgZfuev8d5FGoPmysINSmEAvpHtBL3Eo/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMudW5zcGxhc2gu/Y29tL3Bob3RvLTE1/ODI3Mzg0MTE3MDYt/YmZjOGU2OTFkMWMy/P2ZtPWpwZyZxPTYw/Jnc9MzAwMCZpeGxp/Yj1yYi00LjAuMyZp/eGlkPU0zd3hNakEz/ZkRCOE1IeGxlSEJz/YjNKbExXWmxaV1I4/TVRoOGZIeGxibnd3/Zkh4OGZIdz0.jpeg"
+                    }
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <h2
+                  className={`text-2xl font-bold text-center mb-2 bg-gradient-to-r ${getGenderGradient(
+                    user.gender
+                  )} bg-clip-text text-transparent`}
+                >
+                  {param?.get("fullName") ?? "anonymous"}
+                </h2>
+                <div className="flex justify-center gap-2 text-sm">
+                  <Trophy
+                    className={`w-4 h-4 ${
+                      user.gender === "male" ? "text-blue-500" : "text-pink-500"
+                    } animate-pulse`}
+                  />
                   <span
-                    className={`transition-colors duration-300 ${
+                    className={`${
+                      user.gender === "male" ? "text-blue-600" : "text-pink-600"
+                    } font-medium`}
+                  >
+                    {param?.get("plan")} Member
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="w-full md:w-2/3 space-y-6">
+            {/* Contact Information */}
+            <Card className="transform transition-all duration-300 hover:shadow-xl hover:shadow-purple-100">
+              <CardHeader>
+                <CardTitle className="text-gradient">
+                  Contact Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {contactItems.map((item, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 hover:bg-gradient-to-r ${
                       index === 0
                         ? user.gender === "male"
-                          ? "text-blue-500 group-hover:text-blue-600"
-                          : "text-pink-500 group-hover:text-pink-600"
-                        : "text-purple-500 group-hover:text-purple-600"
-                    }`}
+                          ? "hover:from-blue-50 hover:to-blue-100"
+                          : "hover:from-pink-50 hover:to-pink-100"
+                        : "hover:from-purple-50 hover:to-blue-50"
+                    } group`}
                   >
-                    {item.icon}
-                  </span>
-                  <span className="group-hover:text-purple-700 transition-colors duration-300">
-                    {item.value}
-                  </span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+                    <span
+                      className={`transition-colors duration-300 ${
+                        index === 0
+                          ? user.gender === "male"
+                            ? "text-blue-500 group-hover:text-blue-600"
+                            : "text-pink-500 group-hover:text-pink-600"
+                          : "text-purple-500 group-hover:text-purple-600"
+                      }`}
+                    >
+                      {item.icon}
+                    </span>
+                    <span className="group-hover:text-purple-700 transition-colors duration-300">
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
 
-          {/* Rest of the component remains the same... */}
-          {/* Weight Tracking */}
-          <Card className="transform transition-all duration-300 hover:shadow-xl hover:shadow-purple-100">
-            {/* ... Weight tracking content ... */}
-            <CardHeader>
-              <CardTitle className="text-gradient">Weight Progress</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-center mb-4 p-4 rounded-lg bg-gradient-to-r from-purple-50 to-blue-50">
-                <div className="text-center transform transition-all duration-300 hover:scale-105">
-                  <div className="text-sm text-purple-600">Current</div>
-                  <div className="text-xl font-bold flex items-center gap-2 text-purple-700">
-                    <Weight className="w-4 h-4" />
-                    {param?.get("weight")} kg
+            {/* Rest of the component remains the same... */}
+            {/* Weight Tracking */}
+            <Card className="transform transition-all duration-300 hover:shadow-xl hover:shadow-purple-100">
+              {/* ... Weight tracking content ... */}
+              <CardHeader>
+                <CardTitle className="text-gradient">Weight Progress</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-center mb-4 p-4 rounded-lg bg-gradient-to-r from-purple-50 to-blue-50">
+                  <div className="text-center transform transition-all duration-300 hover:scale-105">
+                    <div className="text-sm text-purple-600">Current</div>
+                    <div className="text-xl font-bold flex items-center gap-2 text-purple-700">
+                      <Weight className="w-4 h-4" />
+                      {param?.get("weight")} kg
+                    </div>
                   </div>
                 </div>
-              </div>
-              {/* <div className="space-y-2">
+                {/* <div className="space-y-2">
                 {user.weight.history.map((record) => (
                   <div
                     key={record.date}
@@ -315,51 +315,51 @@ const aboutPerson: React.FC = () => {
                   </div>
                 ))}
               </div> */}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
 
-      {/* Payment History and Join Date sections remain the same... */}
-      <Card className="transform transition-all duration-300 hover:shadow-xl hover:shadow-purple-100">
-        <CardHeader>
-          <CardTitle className="text-gradient">Remaining Days</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* remaining date */}
-            <div
-              className={`p-4 rounded-lg border transition-all duration-300 transform hover:scale-105 hover:shadow-lg
+        {/* Payment History and Join Date sections remain the same... */}
+        <Card className="transform transition-all duration-300 hover:shadow-xl hover:shadow-purple-100">
+          <CardHeader>
+            <CardTitle className="text-gradient">Remaining Days</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* remaining date */}
+              <div
+                className={`p-4 rounded-lg border transition-all duration-300 transform hover:scale-105 hover:shadow-lg
                 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-green-100`}
-              // bg-gradient-to-r from-red-50 to-rose-50 border-red-200 hover:shadow-red-100
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-sm text-gray-600">
-                    {param?.get("remainingDays")}
+                // bg-gradient-to-r from-red-50 to-rose-50 border-red-200 hover:shadow-red-100
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm text-gray-600">
+                      {param?.get("remainingDays")}
+                    </div>
+                    <div className={`font-medium text-emerald-600 `}>
+                      {/* text-rose-600 */}
+                      days remain
+                    </div>
                   </div>
-                  <div className={`font-medium text-emerald-600 `}>
-                    {/* text-rose-600 */}
-                    days remain
-                  </div>
+                  <Calendar
+                    className={`w-5 h-5 transition-transform duration-300 hover:scale-110 ${
+                      "10" === "10" ? "text-emerald-500" : "text-rose-500"
+                    }`}
+                  />
                 </div>
-                <Calendar
-                  className={`w-5 h-5 transition-transform duration-300 hover:scale-110 ${
-                    "10" === "10" ? "text-emerald-500" : "text-rose-500"
-                  }`}
-                />
               </div>
-            </div>
 
-            {/* payment history */}
-            {/* {paymentHistory.map((payment, index) => {
+              {/* payment history */}
+              {/* {paymentHistory.map((payment, index) => {
               const formattedDate = payment.dueDate.toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
               }); */}
 
-            {/* return (
+              {/* return (
                 <div
                   key={index}
                   className={`p-4 rounded-lg border transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${
@@ -395,85 +395,91 @@ const aboutPerson: React.FC = () => {
                 </div>
               );
             })}*/}
-          </div>
-        </CardContent>
-      </Card>
-      {/* Join Date */}
-      <div className="flex items-center justify-center gap-2 p-4 rounded-full bg-gradient-to-r from-purple-50 to-blue-50 transform transition-all duration-300 hover:shadow-lg hover:scale-105">
-        <Clock className="w-4 h-4 text-purple-500" />
-        <span className="text-purple-700 font-medium">
-          Member since {param?.get("doj") ?? "no information found"}
-        </span>
-      </div>
-      <style jsx global>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
+            </div>
+          </CardContent>
+        </Card>
+        {/* Join Date */}
+        <div className="flex items-center justify-center gap-2 p-4 rounded-full bg-gradient-to-r from-purple-50 to-blue-50 transform transition-all duration-300 hover:shadow-lg hover:scale-105">
+          <Clock className="w-4 h-4 text-purple-500" />
+          <span className="text-purple-700 font-medium">
+            Member since { (new Date (param?.get("doj") ?? "no information found")).toLocaleDateString("en-GB")}
+          </span>
+        </div>
+        <div className="flex items-center justify-center gap-2 p-4 rounded-full bg-gradient-to-r from-purple-50 to-blue-50 transform transition-all duration-300 hover:shadow-lg hover:scale-105">
+          <Clock className="w-4 h-4 text-red-500" />
+          <span className="text-red-700 font-medium">
+            Membership End{" "}
+            {param?.get("membershipEndDate") ?? "no information found"}
+          </span>
+        </div>
+        <style jsx global>{`
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+
+          .animate-fadeIn {
+            animation: fadeIn 0.8s ease-out;
           }
-        }
 
-        .animate-fadeIn {
-          animation: fadeIn 0.8s ease-out;
-        }
-
-        .text-gradient {
-          background: linear-gradient(to right, #8b5cf6, #3b82f6);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-      `}</style>
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="flex justify-end">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <button
-                disabled={loading}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 ${
-                  loading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                {loading ? (
-                  <>
-                    <Loader className="w-4 h-4 animate-spin" />
-                    Deleting...
-                  </>
-                ) : (
-                  <>
-                    <Trash2 className="w-4 h-4" />
-                    Delete
-                  </>
-                )}
-              </button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the
-                  member's account and remove their data from our servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleDelete}
-                  className="bg-red-500 hover:bg-red-600 text-white"
+          .text-gradient {
+            background: linear-gradient(to right, #8b5cf6, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+        `}</style>
+        <div className="max-w-4xl mx-auto p-6">
+          <div className="flex justify-end">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button
+                  disabled={loading}
+                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+                  {loading ? (
+                    <>
+                      <Loader className="w-4 h-4 animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-4 h-4" />
+                      Delete
+                    </>
+                  )}
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    the member's account and remove their data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDelete}
+                    className="bg-red-500 hover:bg-red-600 text-white"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
       </div>
-    </div>
     </>
-   
   );
 };
 

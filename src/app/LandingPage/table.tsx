@@ -244,7 +244,9 @@ const Table = () => {
                       {row.fullName}
                     </th>
                   </Link>
-                  <td className="px-6 py-4">{row.doj}</td>
+                  <td className="px-6 py-4">
+                    {new Date(row.doj).toLocaleDateString("en-GB")}
+                  </td>
                   {/* <td className="px-6 py-4">{row.membershipEndDate}</td> */}
                   <td className="px-6 py-4">{row.totalfees}</td>
                   <td className="px-6 py-4">{row.plan}</td>
