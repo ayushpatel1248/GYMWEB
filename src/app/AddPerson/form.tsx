@@ -184,7 +184,7 @@ export default function Form() {
                   <input
                     type="file"
                     accept="image/*"
-                    capture="environment"
+                    capture
                     onChange={handleFileChange}
                     className="block w-full text-sm text-gray-900"
                   />
