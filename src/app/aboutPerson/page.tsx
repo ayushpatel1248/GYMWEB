@@ -220,7 +220,7 @@ const aboutPerson: React.FC = () => {
                   />
                 </div>
                 <h2
-                  className={`text-2xl font-bold text-center mb-2 bg-gradient-to-r ${getGenderGradient(
+                  className={`text-2xl font-bold text-center mb-2 bg-blue-700 ${getGenderGradient(
                     user.gender
                   )} bg-clip-text text-transparent`}
                 >
@@ -229,12 +229,12 @@ const aboutPerson: React.FC = () => {
                 <div className="flex justify-center gap-2 text-sm">
                   <Trophy
                     className={`w-4 h-4 ${
-                      user.gender === "male" ? "text-blue-500" : "text-pink-500"
+                      user.gender === "male" ? "text-blue-700" : "text-blue-700"
                     } animate-pulse`}
                   />
                   <span
                     className={`${
-                      user.gender === "male" ? "text-blue-600" : "text-pink-600"
+                      user.gender === "male" ? "text-blue-700" : "text-blue-700"
                     } font-medium`}
                   >
                     {param?.get("plan")} Member
@@ -248,7 +248,7 @@ const aboutPerson: React.FC = () => {
             {/* Contact Information */}
             <Card className="transform transition-all duration-300 hover:shadow-xl hover:shadow-purple-100">
               <CardHeader>
-                <CardTitle className="text-gradient">
+                <CardTitle className="text-blue-700">
                   Contact Information
                 </CardTitle>
               </CardHeader>
