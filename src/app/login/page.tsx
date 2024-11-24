@@ -5,6 +5,7 @@ import { ToastAction } from "../../components/ui/toast";
 import { useToast } from "../../hooks/use-toast";
 // import supabase from "@/lib/supabase";
 import { createClient } from "@/utils/supabase/client"; // Use client-side Supabase client
+import { Toaster } from "@/components/ui/toaster";
 
 // import toast
 const login = () => {
@@ -148,6 +149,7 @@ const login = () => {
           </div>
         </div>
       </section>
+      <Toaster />
     </div>
   );
 };

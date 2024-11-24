@@ -234,19 +234,19 @@ const Table = () => {
                       <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
                     )}
                   </td>
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  <Link
+                    href={`/aboutPerson?${new URLSearchParams(row).toString()}`}
                   >
-                    <Link
-                      href={`/aboutPerson?${new URLSearchParams(
-                        row
-                      ).toString()}`}
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {row.fullName}
-                    </Link>
-                  </th>
-                  <td className="px-6 py-4">{row.doj}</td>
+                    </th>
+                  </Link>
+                  <td className="px-6 py-4">
+                    {new Date(row.doj).toLocaleDateString("en-GB")}
+                  </td>
                   {/* <td className="px-6 py-4">{row.membershipEndDate}</td> */}
                   <td className="px-6 py-4">{row.totalfees}</td>
                   <td className="px-6 py-4">{row.plan}</td>
