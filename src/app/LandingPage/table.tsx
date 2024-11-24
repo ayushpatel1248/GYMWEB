@@ -261,7 +261,7 @@ const Table = () => {
                   </td>
                   <td className="px-6 py-4">
                     <Link
-                      href={`/EditPersonInfo?${new URLSearchParams(
+                      href={`/editpersoninfo?${new URLSearchParams(
                         row
                       ).toString()}`}
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
