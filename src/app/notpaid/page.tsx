@@ -170,6 +170,8 @@ const NotPaid = () => {
         className="text-4xl font-bold tracking-[-0.02em] text-blue-700 dark:text-white md:text-7xl md:leading-[5rem]"
         words="SR Fitness"
       />
+      <div className="h-20"></div>
+
       <form className="max-w-md mx-5 mb-5" onSubmit={(e) => e.preventDefault()}>
         <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
           Search
