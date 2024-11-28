@@ -70,16 +70,35 @@ const EditProfilePage: React.FC = () => {
       // Prepare the data for submission
       const { fullName, mobileNumber, weight, membershipPlan } = formData;
 
-      // Perform the update operation
+      // Get the date of joining from URL params
+      const dojString = param?.get("doj");
+      const doj = dojString ? new Date(dojString) : new Date();
+
+      // Calculate plan expiry date
+      const expiryDate = new Date(doj);
+      expiryDate.setMonth(expiryDate.getMonth() + membershipPlan);
+
+      // Check if current plan is being modified and expiry is in future
+      const isPlanModified = membershipPlan !== plan;
+      const isActivePlan = expiryDate > new Date();
+
+      // Prepare update object
+      const updateData: any = {
+        fullName,
+        mobileNumber,
+        weight,
+        plan: `${membershipPlan} Month`,
+      };
+
+      // Conditionally add status if plan is modified and active
+      if (isPlanModified && isActivePlan) {
+        updateData.feesstatus = true;
+      }
+
       const { data, error } = await supabase
-        .from("personList") // Replace 'profiles' with your table name
-        .update({
-          fullName: fullName, // Match the column names in your database
-          mobileNumber: mobileNumber,
-          weight,
-          plan: `${membershipPlan} Month`,
-        })
-        .eq("id", param?.get("id")); // Ensure the `id` is provided (e.g., from URL params)
+        .from("personList")
+        .update(updateData)
+        .eq("id", param?.get("id"));
 
       // Handle success or error
       if (error) {
