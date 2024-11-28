@@ -77,7 +77,7 @@ const EditProfilePage: React.FC = () => {
           fullName: fullName, // Match the column names in your database
           mobileNumber: mobileNumber,
           weight,
-          plan: membershipPlan,
+          plan: `${membershipPlan} Month`,
         })
         .eq("id", param?.get("id")); // Ensure the `id` is provided (e.g., from URL params)
 

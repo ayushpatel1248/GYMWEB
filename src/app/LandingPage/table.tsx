@@ -72,6 +72,7 @@ const Table = () => {
     }
   };
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
