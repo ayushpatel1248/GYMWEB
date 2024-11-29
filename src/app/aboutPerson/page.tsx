@@ -330,22 +330,22 @@ const aboutPerson: React.FC = () => {
               {/* remaining date */}
               <div
                 className={`p-4 rounded-lg border transition-all duration-300 transform hover:scale-105 hover:shadow-lg
-                bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-green-100`}
+                ${Number(param?.get("remainingDays"))>=0?"bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-green-100":"bg-gradient-to-r from-red-50 to-red-50 border-red-200 hover:shadow-red-100"}  `}
                 // bg-gradient-to-r from-red-50 to-rose-50 border-red-200 hover:shadow-red-100
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm text-gray-600">
+                    <div className={`text-sm ${Number(param?.get("remainingDays"))>=0?"text-gray-600":"text-red-900"}`}>
                       {param?.get("remainingDays")}
                     </div>
-                    <div className={`font-medium text-emerald-600 `}>
+                    <div className={`font-medium ${Number(param?.get("remainingDays"))>=0?"text-emerald-600":"text-red-800"}`}>
                       {/* text-rose-600 */}
                       days remain
                     </div>
                   </div>
                   <Calendar
                     className={`w-5 h-5 transition-transform duration-300 hover:scale-110 ${
-                      "10" === "10" ? "text-emerald-500" : "text-rose-500"
+                      Number(param?.get("remainingDays"))>=0? "text-emerald-500" : "text-red-800"
                     }`}
                   />
                 </div>
