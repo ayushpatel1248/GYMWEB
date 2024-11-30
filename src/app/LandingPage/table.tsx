@@ -228,7 +228,7 @@ const Table = () => {
           <tbody>
             {filteredData.length > 0 ? (
               filteredData.map((row, index) => (
-                <tr key={index} className="border-b ">
+                <tr key={index} className="border-b">
                   <td className="px-6 py-4">
                     {row.imageUrl ? (
                       <img
@@ -272,6 +272,7 @@ const Table = () => {
                         row
                       ).toString()}`}
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      onClick={handleRedirect}
                     >
                       Edit
                     </Link>
