@@ -177,24 +177,37 @@ export default function Form() {
                   Add Photo
                 </label>
 
-                <div className="mt-2 flex items-center gap-x-3">
-                  <UserCircleIcon
+                <div className="flex items-center gap-x-3">
+                  {imageFile ? (
+                    <div>
+                      <img
+                        src={URL.createObjectURL(imageFile)}
+                        alt="Selected"
+                        style={{ objectFit: "cover", marginTop: "10px" }}
+                        className="h-16 w-16 rounded-full"
+                      />
+                    </div>
+                  ) : (
+                    <UserCircleIcon
                     aria-hidden="true"
-                    className="h-12 w-12 text-gray-300"
+                    className="h-16 w-16 text-blue-300"
                   />
+                  )}
+                  
                   {/* add photo statrt */}
                   <div>
                     <span>
-                      <div className="file-input">
+                      <div className={`file-input ${imageFile?"pt-3":""}`}>
                         <input
                           type="file"
                           name="file-input"
                           id="file-input"
-                          className="file-input__input-profile"
+                          className="file-input__input-profile "
                           accept='image/*'
                           onChange={handleFileChange}
+
                         />
-                        <label className="file-input__label-profile" htmlFor="file-input">
+                        <label className="file-input__label-profile bg-blue-700" htmlFor="file-input">
                           <svg
                             aria-hidden="true"
                             focusable="false"
@@ -214,15 +227,6 @@ export default function Form() {
                       </div>
                     </span>
                   </div>
-
-                  {/* add photo endds */}
-                  {/* <input
-                    type="file"
-                    accept="image/*"
-                    // capture
-                    onChange={handleFileChange}
-                    className="block w-full text-sm text-gray-900"
-                  /> */}
                 </div>
               </div>
             </div>
