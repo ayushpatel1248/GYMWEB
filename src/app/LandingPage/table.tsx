@@ -9,8 +9,13 @@ const Table = () => {
   const supabase = createClient();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [filteredData, setFilteredData] = useState<any[]>([]); // For filtered results
-  const [searchTerm, setSearchTerm] = useState<string>(""); // Search term state
+  const [filteredData, setFilteredData] = useState<any[]>([]); 
+  const [searchTerm, setSearchTerm] = useState<string>(""); 
+  const [redirecting, setRedirecting] = useState<boolean>(false);
+
+  const handleRedirect = () => {
+    setRedirecting(true);
+  };
 
   const parsePlanMonths = (planString: string): number => {
     const matches = planString.match(/(\d+)/);
@@ -157,7 +162,7 @@ const Table = () => {
     setFilteredData(filtered);
   };
 
-  if (loading) {
+  if (loading || redirecting) {
     return (
       <div className="h-[60vh] flex justify-center items-center ">
         <Loader />
@@ -223,7 +228,7 @@ const Table = () => {
           <tbody>
             {filteredData.length > 0 ? (
               filteredData.map((row, index) => (
-                <tr key={index}>
+                <tr key={index} className="border-b">
                   <td className="px-6 py-4">
                     {row.imageUrl ? (
                       <img
@@ -240,7 +245,8 @@ const Table = () => {
                   >
                     <th
                       scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      className="px-6 py-7 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      onClick={handleRedirect}
                     >
                       {row.fullName}
                     </th>
@@ -266,6 +272,7 @@ const Table = () => {
                         row
                       ).toString()}`}
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      onClick={handleRedirect}
                     >
                       Edit
                     </Link>
