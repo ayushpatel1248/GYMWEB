@@ -57,7 +57,7 @@ const compressImage = async (file: File): Promise<File> => {
             }
           },
           "image/jpeg",
-          0.7 // Compression quality (0.7 = 70% quality)
+          0.1 // Compression quality (0.7 = 70% quality)
         );
       };
     };
@@ -189,15 +189,15 @@ export default function Form() {
                     </div>
                   ) : (
                     <UserCircleIcon
-                    aria-hidden="true"
-                    className="h-16 w-16 text-blue-300"
-                  />
+                      aria-hidden="true"
+                      className="h-16 w-16 text-blue-300"
+                    />
                   )}
-                  
+
                   {/* add photo start */}
                   <div>
                     <span>
-                      <div className={`file-input ${imageFile?"pt-3":""}`}>
+                      <div className={`file-input ${imageFile ? "pt-3" : ""}`}>
                         <input
                           type="file"
                           name="file-input"
@@ -224,7 +224,28 @@ export default function Form() {
                               d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"
                             ></path>
                           </svg>
-                          <span>{imageFile?.name ?? "Update Image Photo"}</span></label>
+                          <span>{imageFile?.name ?? "Update Image Photo"}</span>
+                        </label>
+                      </div>
+                    </span>
+                  </div>
+                  {/* camera option */}
+                  <div className="buttonn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none" className="svg-icon"><g stroke-width="2" stroke-linecap="round" stroke="#fff" fill-rule="evenodd" clip-rule="evenodd"><path d="m4 9c0-1.10457.89543-2 2-2h2l.44721-.89443c.33879-.67757 1.03131-1.10557 1.78889-1.10557h3.5278c.7576 0 1.4501.428 1.7889 1.10557l.4472.89443h2c1.1046 0 2 .89543 2 2v8c0 1.1046-.8954 2-2 2h-12c-1.10457 0-2-.8954-2-2z"></path><path d="m15 13c0 1.6569-1.3431 3-3 3s-3-1.3431-3-3 1.3431-3 3-3 3 1.3431 3 3z"></path></g></svg>
+                    <span>
+                      <div className={`${imageFile ? "pt-3" : ""}`}>
+                        <input
+                          type="file"
+                          name="file-input"
+                          id="file-input"
+                          className="file-input__input-profile "
+                          accept='image/*'
+                          capture="environment"
+                          onChange={handleFileChange}
+                        />
+                        <label className="" htmlFor="file-input">
+                          <span className="lablee">Take a Photo</span>
+                        </label>
                       </div>
                     </span>
                   </div>
