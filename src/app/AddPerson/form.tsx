@@ -88,6 +88,7 @@ export default function Form() {
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
+    console.log(files)
     if (files && files.length > 0) {
       try {
         const compressedImage = await compressImage(files[0]);
@@ -112,8 +113,7 @@ export default function Form() {
         const { data: storageData, error: storageError } =
           await supabase.storage
             .from("gymweb")
-            .upload(`images/${imageFile.name}`, imageFile);
-
+            .upload(`images/${imageFile.name}+${mobileNumber}`, imageFile);
         if (storageError) {
           console.error("Error uploading image:", storageError.message);
           alert("Failed to upload image!");
