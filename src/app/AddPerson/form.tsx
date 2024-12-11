@@ -194,7 +194,7 @@ export default function Form() {
                   />
                   )}
                   
-                  {/* add photo statrt */}
+                  {/* add photo start */}
                   <div>
                     <span>
                       <div className={`file-input ${imageFile?"pt-3":""}`}>
@@ -204,6 +204,7 @@ export default function Form() {
                           id="file-input"
                           className="file-input__input-profile "
                           accept='image/*'
+                          capture="environment"
                           onChange={handleFileChange}
 
                         />
