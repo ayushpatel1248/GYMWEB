@@ -241,10 +241,10 @@ padding-right: 2%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 9px 12px;
-    gap: 8px;
+    padding: 9px;
+    /* gap: 8px; */
     height: 40px;
-    width: 172px;
+    /* width: 172px; */
     border: none;
     background: #FF2849;
     border-radius: 20px;
