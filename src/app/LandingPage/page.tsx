@@ -1,13 +1,15 @@
 "use client";
-import FloatingNavDemo from "./navbar";
-import WordPullUp from "@/components/ui/word-pull-up";
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { PlusIcon } from 'lucide-react';
+import BottomNavbar from "./bottom-navbar";
+import LandingPageHeader from "./header";
 import Table from "./table";
-import Link from "next/link";
-import { useState } from "react";
-import Loader from "@/components/ui/Loader";
+import { motion } from 'framer-motion';
 
 const LandingPage = () => {
-  const [redirecting, setRedirecting] = useState<boolean>(false);
+  const [redirecting, setRedirecting] = useState(false);
 
   const handleRedirect = () => {
     setRedirecting(true);
@@ -15,33 +17,41 @@ const LandingPage = () => {
 
   if (redirecting) {
     return (
-      <div className="h-screen flex justify-center items-center ">
-        <Loader />
+      <div className="h-screen flex justify-center items-center bg-gray-50">
+        <div className="loader"></div>
       </div>
     );
   }
 
   return (
-    <div>
-      <FloatingNavDemo />
-      <WordPullUp
-        className="text-4xl font-bold tracking-[-0.02em] text-blue-700 dark:text-white md:text-7xl md:leading-[5rem]"
-        words="SR Fitness"
-      />
-      <div className="h-20"></div>
-      <div className="h-20 bottom-8 right-9 fixed z-40">
-        <Link href="/AddPerson">
-          <button
-            type="button"
-            className="border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-5 text-center inline-flex items-center bg-blue-700 dark:border-blue-500 dark:text-white dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500 text-white"
-            onClick={handleRedirect}
-          >
-            Add
-            <span className="sr-only">Icon description</span>
-          </button>
-        </Link>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 pb-24">
+      <LandingPageHeader />
+      <BottomNavbar />
+      
+      <div className="container mx-auto px-4 py-2">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="fixed bottom-24 right-8 z-40"
+        >
+          <Link href="/AddPerson">
+            <button 
+              onClick={handleRedirect}
+              className="group relative overflow-hidden 
+              rounded-full p-4 bg-blue-600 text-white 
+              shadow-xl hover:shadow-2xl transition-all duration-300 
+              transform hover:scale-105 focus:outline-none 
+              focus:ring-4 focus:ring-blue-300"
+            >
+              <PlusIcon className="w-6 h-6" />
+              <span className="sr-only">Add New Person</span>
+            </button>
+          </Link>
+        </motion.div>
+
+        <Table />
       </div>
-      <Table />
     </div>
   );
 };

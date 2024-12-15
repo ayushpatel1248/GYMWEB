@@ -1,9 +1,22 @@
 "use client";
 import Link from "next/link";
-import Button from "../../utils/Button";
-import { createClient } from "../../utils/supabase/client";
 import { useState, useEffect } from "react";
-import Loader from "@/components/ui/Loader";
+import { createClient } from "../../utils/supabase/client";
+import { motion, AnimatePresence } from "framer-motion";
+import { SearchIcon } from "lucide-react";
+
+interface StatusBadgeProps {
+  status: boolean;
+}
+
+const StatusBadge : React.FC<StatusBadgeProps> = ({ status }) => (
+  <span 
+    className={`px-3 py-1 rounded-full text-xs font-semibold 
+    ${status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+  >
+    {status ? 'Paid' : 'Unpaid'}
+  </span>
+);
 
 const Table = () => {
   const supabase = createClient();
@@ -77,7 +90,6 @@ const Table = () => {
     }
   };
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -131,6 +143,7 @@ const Table = () => {
             return row;
           })
         );
+        
         const sortedData = updatedData.sort((a, b) => {
           if (a.feesstatus === b.feesstatus) {
             // If status is the same, sort by name
@@ -164,128 +177,102 @@ const Table = () => {
 
   if (loading || redirecting) {
     return (
-      <div className="h-[60vh] flex justify-center items-center ">
-        <Loader />
+      <div className="h-[60vh] flex justify-center items-center">
+        <div className="animate-spin w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full"></div>
       </div>
     );
   }
 
   return (
-    <div>
-      <form className="max-w-md mx-5 mb-5" onSubmit={(e) => e.preventDefault()}>
-        <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
-          Search
-        </label>
+    <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+      <div className="p-4 bg-gray-50 dark:bg-gray-700">
         <div className="relative">
-          <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            {/* SVG icon here */}
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <SearchIcon className="w-5 h-5 text-gray-400" />
           </div>
           <input
             type="search"
             value={searchTerm}
             onChange={handleSearch}
-            id="default-search"
-            className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search Person"
+            placeholder="Search Members"
+            className="w-full pl-10 pr-4 py-2 rounded-lg 
+            border border-gray-300 dark:border-gray-600 
+            bg-white dark:bg-gray-800 
+            text-gray-900 dark:text-white 
+            focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+            transition-colors duration-300"
           />
-          <button
-            type="submit"
-            className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Search
-          </button>
         </div>
-      </form>
-      <div className="overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-100 dark:bg-gray-700">
             <tr>
-              <th scope="col" className="px-6 py-3">
-                Image
-              </th>
-              <th scope="col" className="px-6 py-3">
-                NAME
-              </th>
-              <th scope="col" className="px-6 py-3">
-                DOJ
-              </th>
-              {/* <th scope="col" className="px-6 py-3">End Date</th> */}
-              <th scope="col" className="px-6 py-3">
-                Fees
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Plan
-              </th>
-              {/* <th scope="col" className="px-6 py-3">Remaining Days</th> */}
-              <th scope="col" className="px-6 py-3">
-                Status
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Action
-              </th>
+              {['Image', 'Name', 'Date of Join', 'Fees', 'Plan', 'Status', 'Actions'].map(header => (
+                <th key={header} className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {filteredData.length > 0 ? (
-              filteredData.map((row, index) => (
-                <tr key={index} className="border-b">
-                  <td className="px-6 py-4">
-                    {row.imageUrl ? (
-                      <img
-                        src={row.imageUrl}
-                        alt="User Image"
-                        className="w-10 h-10 object-cover rounded-full"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                    )}
-                  </td>
-                  <Link
-                    href={`/aboutPerson?${new URLSearchParams(row).toString()}`}
+            <AnimatePresence>
+              {filteredData.length > 0 ? (
+                filteredData.map((row, index) => (
+                  <motion.tr 
+                    key={row.id} 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
-                    <th
-                      scope="row"
-                      className="px-6 py-7 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      onClick={handleRedirect}
-                    >
-                      {row.fullName}
-                    </th>
-                  </Link>
-                  <td className="px-6 py-4">
-                    {new Date(row.doj).toLocaleDateString("en-GB")}
-                  </td>
-                  {/* <td className="px-6 py-4">{row.membershipEndDate}</td> */}
-                  <td className="px-6 py-4">{row.totalfees}</td>
-                  <td className="px-6 py-4">{row.plan}</td>
-                  {/* <td className="px-6 py-4">
-                  <span className={`font-medium ${row.remainingDays <= 0 ? 'text-red-600' : 
-                    row.remainingDays <= 7 ? 'text-yellow-600' : 'text-green-600'}`}>
-                    {row.remainingDays <= 0 ? 'Expired' : `${row.remainingDays} days`}
-                  </span>
-                </td> */}
-                  <td className="text-white">
-                    <Button status={row.feesstatus ? "paid" : "unpaid"} />
-                  </td>
-                  <td className="px-6 py-4">
-                    <Link
-                      href={`/editpersoninfo?${new URLSearchParams(
-                        row
-                      ).toString()}`}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      onClick={handleRedirect}
-                    >
-                      Edit
-                    </Link>
+                    <td className="px-4 py-4">
+                      {row.imageUrl ? (
+                        <img 
+                          src={row.imageUrl} 
+                          alt={row.fullName} 
+                          className="w-10 h-10 rounded-full object-cover" 
+                        />
+                      ) : (
+                        <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                      )}
+                    </td>
+                    <td className="px-4 py-4 font-medium text-gray-900 dark:text-white">
+                      <Link href={`/aboutPerson?${new URLSearchParams(row).toString()}`}>
+                        {row.fullName}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-4 text-gray-500 dark:text-gray-300">
+                      {new Date(row.doj).toLocaleDateString("en-GB")}
+                    </td>
+                    <td className="px-4 py-4 font-semibold text-gray-700 dark:text-gray-200">
+                      {row.totalfees}
+                    </td>
+                    <td className="px-4 py-4 text-gray-500 dark:text-gray-300">
+                      {row.plan}
+                    </td>
+                    <td className="px-4 py-4">
+                      <StatusBadge status={row.feesstatus} />
+                    </td>
+                    <td className="px-4 py-4">
+                      <Link 
+                        href={`/editpersoninfo?${new URLSearchParams(row).toString()}`}
+                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors"
+                      >
+                        Edit
+                      </Link>
+                    </td>
+                  </motion.tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} className="text-center py-8 text-gray-500 dark:text-gray-400">
+                    No members found
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={9} className="text-center px-6 py-4">
-                  No data available
-                </td>
-              </tr>
-            )}
+              )}
+            </AnimatePresence>
           </tbody>
         </table>
       </div>
