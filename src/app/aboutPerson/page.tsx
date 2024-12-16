@@ -30,6 +30,8 @@ import { createClient } from "../../utils/supabase/client";
 import { Trash2, Loader } from "lucide-react";
 import FloatingNavDemo from "../LandingPage/navbar";
 import WordPullUp from "@/components/ui/word-pull-up";
+import BottomNavbar from "../LandingPage/bottom-navbar";
+import LandingPageHeader from "../LandingPage/header";
 
 // Types and Interfaces
 type Gender = "male" | "female" | "other";
@@ -190,13 +192,15 @@ const aboutPerson: React.FC = () => {
     setParam(params);
   }, []);
   return (
-    <>
-      <FloatingNavDemo />
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 pb-24">
+      {/* <FloatingNavDemo />
       <WordPullUp
         className="text-4xl font-bold tracking-[-0.02em] text-blue-700 dark:text-white md:text-7xl md:leading-[5rem]"
         words="SR Fitness"
-      />
-      <div className="max-w-4xl mx-auto p-6 space-y-6 mt-10">
+      /> */}
+      <LandingPageHeader />
+      <BottomNavbar />
+      <div className="max-w-4xl mx-auto p-6 space-y-6 mt-5">
         {/* Header Profile Section */}
         <div className="flex flex-col md:flex-row gap-6 items-start animate-fadeIn">
           <div className="w-full md:w-1/3">
@@ -330,22 +334,40 @@ const aboutPerson: React.FC = () => {
               {/* remaining date */}
               <div
                 className={`p-4 rounded-lg border transition-all duration-300 transform hover:scale-105 hover:shadow-lg
-                ${Number(param?.get("remainingDays"))>=0?"bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-green-100":"bg-gradient-to-r from-red-50 to-red-50 border-red-200 hover:shadow-red-100"}  `}
+                ${
+                  Number(param?.get("remainingDays")) >= 0
+                    ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-green-100"
+                    : "bg-gradient-to-r from-red-50 to-red-50 border-red-200 hover:shadow-red-100"
+                }  `}
                 // bg-gradient-to-r from-red-50 to-rose-50 border-red-200 hover:shadow-red-100
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className={`text-sm ${Number(param?.get("remainingDays"))>=0?"text-gray-600":"text-red-900"}`}>
+                    <div
+                      className={`text-sm ${
+                        Number(param?.get("remainingDays")) >= 0
+                          ? "text-gray-600"
+                          : "text-red-900"
+                      }`}
+                    >
                       {param?.get("remainingDays")}
                     </div>
-                    <div className={`font-medium ${Number(param?.get("remainingDays"))>=0?"text-emerald-600":"text-red-800"}`}>
+                    <div
+                      className={`font-medium ${
+                        Number(param?.get("remainingDays")) >= 0
+                          ? "text-emerald-600"
+                          : "text-red-800"
+                      }`}
+                    >
                       {/* text-rose-600 */}
                       days remain
                     </div>
                   </div>
                   <Calendar
                     className={`w-5 h-5 transition-transform duration-300 hover:scale-110 ${
-                      Number(param?.get("remainingDays"))>=0? "text-emerald-500" : "text-red-800"
+                      Number(param?.get("remainingDays")) >= 0
+                        ? "text-emerald-500"
+                        : "text-red-800"
                     }`}
                   />
                 </div>
@@ -402,7 +424,10 @@ const aboutPerson: React.FC = () => {
         <div className="flex items-center justify-center gap-2 p-4 rounded-full bg-gradient-to-r from-purple-50 to-blue-50 transform transition-all duration-300 hover:shadow-lg hover:scale-105">
           <Clock className="w-4 h-4 text-purple-500" />
           <span className="text-purple-700 font-medium">
-            Member since { (new Date (param?.get("doj") ?? "no information found")).toLocaleDateString("en-GB")}
+            Member since{" "}
+            {new Date(
+              param?.get("doj") ?? "no information found"
+            ).toLocaleDateString("en-GB")}
           </span>
         </div>
         <div className="flex items-center justify-center gap-2 p-4 rounded-full bg-gradient-to-r from-purple-50 to-blue-50 transform transition-all duration-300 hover:shadow-lg hover:scale-105">
@@ -479,7 +504,7 @@ const aboutPerson: React.FC = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

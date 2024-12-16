@@ -160,7 +160,7 @@ export default function Form() {
   };
 
   return (
-    <div className="container mt-20 mb-20">
+    <div className="container mt-5 mb-20">
       <form onSubmit={handleFormSubmit}>
         <div className="space-y-12">
           <div>

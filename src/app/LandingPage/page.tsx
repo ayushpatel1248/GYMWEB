@@ -17,8 +17,8 @@ const LandingPage = () => {
 
   if (redirecting) {
     return (
-      <div className="h-screen flex justify-center items-center bg-gray-50">
-        <div className="loader"></div>
+      <div className="h-[60vh] flex justify-center items-center">
+        <div className="animate-spin w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full"></div>
       </div>
     );
   }

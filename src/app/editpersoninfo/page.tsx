@@ -11,6 +11,8 @@ import Loader from "./../../components/ui/Loader";
 import { useRouter } from "next/navigation";
 import FloatingNavDemo from "../LandingPage/navbar";
 import WordPullUp from "@/components/ui/word-pull-up";
+import BottomNavbar from "../LandingPage/bottom-navbar";
+import LandingPageHeader from "../LandingPage/header";
 // Interface for form data
 interface FormData {
   fullName: string | null;
@@ -148,13 +150,15 @@ const EditProfilePage: React.FC = () => {
       <Loader />
     </div>
   ) : (
-    <>
-      <FloatingNavDemo />
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 pb-24">
+      {/* <FloatingNavDemo />
       <WordPullUp
         className="text-4xl font-bold tracking-[-0.02em] text-blue-700 dark:text-white md:text-7xl md:leading-[5rem]"
         words="SR Fitness"
       />
-      <div className="h-20"></div>
+      <div className="h-20"></div> */}
+       <LandingPageHeader />
+      <BottomNavbar />
       <div className="min-h-screen bg-gray-50 p-8">
         <Card className="max-w-2xl mx-auto">
           <CardHeader>
@@ -294,7 +298,7 @@ const EditProfilePage: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-    </>
+    </div>
   );
 };
 
