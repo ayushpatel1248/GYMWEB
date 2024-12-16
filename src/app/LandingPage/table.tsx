@@ -238,7 +238,7 @@ const Table = () => {
                         <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
                       )}
                     </td>
-                    <td className="px-4 py-4 font-medium text-gray-900 dark:text-white">
+                    <td className="px-4 py-4 font-medium text-gray-900 dark:text-white" onClick={handleRedirect}>
                       <Link href={`/aboutPerson?${new URLSearchParams(row).toString()}`}>
                         {row.fullName}
                       </Link>
@@ -255,7 +255,7 @@ const Table = () => {
                     <td className="px-4 py-4">
                       <StatusBadge status={row.feesstatus} />
                     </td>
-                    <td className="px-4 py-4">
+                    <td className="px-4 py-4" onClick={handleRedirect}>
                       <Link 
                         href={`/editpersoninfo?${new URLSearchParams(row).toString()}`}
                         className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors"
