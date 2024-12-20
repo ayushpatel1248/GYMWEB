@@ -296,7 +296,7 @@ const aboutPerson: React.FC = () => {
                     <div className="text-sm text-purple-600">Current</div>
                     <div className="text-xl font-bold flex items-center gap-2 text-purple-700">
                       <Weight className="w-4 h-4" />
-                      {param?.get("weight")} kg
+                      {param?.get("wp")} kg
                     </div>
                   </div>
                 </div>
@@ -350,51 +350,6 @@ const aboutPerson: React.FC = () => {
                   />
                 </div>
               </div>
-
-              {/* payment history */}
-              {/* {paymentHistory.map((payment, index) => {
-              const formattedDate = payment.dueDate.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              }); */}
-
-              {/* return (
-                <div
-                  key={index}
-                  className={`p-4 rounded-lg border transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${
-                    payment.status === "paid"
-                      ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-green-100"
-                      : "bg-gradient-to-r from-red-50 to-rose-50 border-red-200 hover:shadow-red-100"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm text-gray-600">
-                        {formattedDate}
-                      </div>
-                      <div
-                        className={`font-medium ${
-                          payment.status === "paid"
-                            ? "text-emerald-600"
-                            : "text-rose-600"
-                        }`}
-                      >
-                        {payment.status.charAt(0).toUpperCase() +
-                          payment.status.slice(1)}
-                      </div>
-                    </div>
-                    <Calendar
-                      className={`w-5 h-5 transition-transform duration-300 hover:scale-110 ${
-                        payment.status === "paid"
-                          ? "text-emerald-500"
-                          : "text-rose-500"
-                      }`}
-                    />
-                  </div>
-                </div>
-              );
-            })}*/}
             </div>
           </CardContent>
         </Card>

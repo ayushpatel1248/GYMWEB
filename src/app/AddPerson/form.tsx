@@ -133,7 +133,8 @@ export default function Form() {
           totalfees: totalFees,
           feesstatus: feesPaid,
           imagePath,
-          weight
+          weight,
+          wp:[weight]
         },
       ]);
 
