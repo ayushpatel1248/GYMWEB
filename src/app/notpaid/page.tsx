@@ -6,6 +6,24 @@ import { useState, useEffect } from "react";
 import Loader from "@/components/ui/Loader";
 import FloatingNavDemo from "../LandingPage/navbar";
 import WordPullUp from "@/components/ui/word-pull-up";
+import { motion, AnimatePresence } from "framer-motion";
+import { SearchIcon } from "lucide-react";
+import React from "react";
+import { PlusIcon } from "lucide-react";
+import BottomNavbar from "../LandingPage/bottom-navbar";
+import LandingPageHeader from "../LandingPage/header";
+interface StatusBadgeProps {
+  status: boolean;
+}
+
+const StatusBadge : React.FC<StatusBadgeProps> = ({ status }) => (
+  <span
+    className={`px-3 py-1 rounded-full text-xs font-semibold 
+    ${status ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+  >
+    {status ? "Paid" : "Unpaid"}
+  </span>
+);
 
 const NotPaid = () => {
   const supabase = createClient();
@@ -164,116 +182,145 @@ const NotPaid = () => {
   }
 
   return (
-    <div>
-      <FloatingNavDemo />
-      <WordPullUp
-        className="text-4xl font-bold tracking-[-0.02em] text-blue-700 dark:text-white md:text-7xl md:leading-[5rem]"
-        words="SR Fitness"
-      />
-      <div className="h-20"></div>
-
-      <form className="max-w-md mx-5 mb-5" onSubmit={(e) => e.preventDefault()}>
-        <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
-          Search
-        </label>
-        <div className="relative">
-          <input
-            type="search"
-            value={searchTerm}
-            onChange={handleSearch}
-            id="default-search"
-            className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search Unpaid Person"
-          />
-          <button
-            type="submit"
-            className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Search
-          </button>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 pb-24">
+      <LandingPageHeader />
+      <BottomNavbar />
+      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+        <div className="p-4 bg-gray-50 dark:bg-gray-700">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <SearchIcon className="w-5 h-5 text-gray-400" />
+            </div>
+            <input
+              type="search"
+              value={searchTerm}
+              onChange={handleSearch}
+              placeholder="Search Members"
+              className="w-full pl-10 pr-4 py-2 rounded-lg 
+          border border-gray-300 dark:border-gray-600 
+          bg-white dark:bg-gray-800 
+          text-gray-900 dark:text-white 
+          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+          transition-colors duration-300"
+            />
+          </div>
         </div>
-      </form>
-      <div className="overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Image
-              </th>
-              <th scope="col" className="px-6 py-3">
-                NAME
-              </th>
-              <th scope="col" className="px-6 py-3">
-                DOJ
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Fees
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Plan
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Status
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.length > 0 ? (
-              filteredData.map((row, index) => (
-                <tr key={index}>
-                  <td className="px-6 py-4">
-                    {row.imageUrl ? (
-                      <img
-                        src={row.imageUrl}
-                        alt="User Image"
-                        className="w-10 h-10 object-cover rounded-full"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                    )}
-                  </td>
-                  <Link
-                    href={`/aboutPerson?${new URLSearchParams(row).toString()}`}
-                  >
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      {row.fullName}
-                    </th>
-                  </Link>
-                  <td className="px-6 py-4">
-                    {new Date(row.doj).toLocaleDateString("en-GB")}
-                  </td>
-                  <td className="px-6 py-4">{row.totalfees}</td>
-                  <td className="px-6 py-4">{row.plan}</td>
-                  <td className="text-white">
-                    <Button status="unpaid" />
-                  </td>
-                  <td className="px-6 py-4">
-                    <Link
-                      href={`/editpersoninfo?${new URLSearchParams(
-                        row
-                      ).toString()}`}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      Edit
-                    </Link>
-                  </td>
-                </tr>
-              ))
-            ) : (
+
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-100 dark:bg-gray-700">
               <tr>
-                <td colSpan={9} className="text-center px-6 py-4">
-                  No unpaid members found
-                </td>
+                {[
+                  "Image",
+                  "Name",
+                  "Date of Join",
+                  "Fees",
+                  "Plan",
+                  "Status",
+                  "Actions",
+                ].map((header) => (
+                  <th
+                    key={header}
+                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <AnimatePresence>
+                {filteredData.length > 0 ? (
+                  filteredData.map((row, index) => (
+                    <motion.tr
+                      key={row.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <td className="px-4 py-4">
+                        {row.imageUrl ? (
+                          <img
+                            src={row.imageUrl}
+                            alt={row.fullName}
+                            className="w-10 h-10 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                        )}
+                      </td>
+                      <td className="px-4 py-4 font-medium text-gray-900 dark:text-white">
+                        <Link
+                          href={`/aboutPerson?${new URLSearchParams(
+                            row
+                          ).toString()}`}
+                        >
+                          {row.fullName}
+                        </Link>
+                      </td>
+                      <td className="px-4 py-4 text-gray-500 dark:text-gray-300">
+                        {new Date(row.doj).toLocaleDateString("en-GB")}
+                      </td>
+                      <td className="px-4 py-4 font-semibold text-gray-700 dark:text-gray-200">
+                        {row.totalfees}
+                      </td>
+                      <td className="px-4 py-4 text-gray-500 dark:text-gray-300">
+                        {row.plan}
+                      </td>
+                      <td className="px-4 py-4">
+                        <StatusBadge status={row.feesstatus} />
+                      </td>
+                      <td className="px-4 py-4">
+                        <Link
+                          href={`/editpersoninfo?${new URLSearchParams(
+                            row
+                          ).toString()}`}
+                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors"
+                        >
+                          Edit
+                        </Link>
+                      </td>
+                    </motion.tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={7}
+                      className="text-center py-8 text-gray-500 dark:text-gray-400"
+                    >
+                      No members found
+                    </td>
+                  </tr>
+                )}
+              </AnimatePresence>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-2">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="fixed bottom-24 right-8 z-40"
+        >
+          <Link href="/AddPerson">
+            <button
+              // onClick={handleRedirect}
+              onClick={()=>setLoading(true)}
+              className="group relative overflow-hidden 
+            rounded-full p-4 bg-blue-600 text-white 
+            shadow-xl hover:shadow-2xl transition-all duration-300 
+            transform hover:scale-105 focus:outline-none 
+            focus:ring-4 focus:ring-blue-300"
+            >
+              <PlusIcon className="w-6 h-6" />
+              {/* <span className="sr-only">Add New Person</span> */}
+            </button>
+          </Link>
+        </motion.div>
       </div>
     </div>
   );
