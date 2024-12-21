@@ -94,9 +94,12 @@ const EditProfilePage: React.FC = () => {
       const updateData: any = {
         fullName,
         mobileNumber,
-        wp:[...formData.wp , {weight:weightProgress , date:new Date().toLocaleDateString("en-CA")}],
+        wp: formData.wp.length < 7
+          ? [...formData.wp, { weight: weightProgress, date: new Date().toLocaleDateString("en-CA") }]
+          : [...formData.wp.slice(1), { weight: weightProgress, date: new Date().toLocaleDateString("en-CA") }],
         plan: `${membershipPlan} Month`,
       };
+      
 
       // Conditionally add status if plan is modified and active
       if (isPlanModified && isActivePlan) {
