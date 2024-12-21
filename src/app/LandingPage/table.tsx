@@ -9,8 +9,8 @@ interface StatusBadgeProps {
   status: boolean;
 }
 
-const StatusBadge : React.FC<StatusBadgeProps> = ({ status }) => (
-  <span 
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => (
+  <span
     className={`px-3 py-1 rounded-full text-xs font-semibold 
     ${status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
   >
@@ -22,8 +22,8 @@ const Table = () => {
   const supabase = createClient();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [filteredData, setFilteredData] = useState<any[]>([]); 
-  const [searchTerm, setSearchTerm] = useState<string>(""); 
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [redirecting, setRedirecting] = useState<boolean>(false);
 
   const handleRedirect = () => {
@@ -143,7 +143,7 @@ const Table = () => {
             return row;
           })
         );
-        
+
         const sortedData = updatedData.sort((a, b) => {
           if (a.feesstatus === b.feesstatus) {
             // If status is the same, sort by name
@@ -152,7 +152,7 @@ const Table = () => {
           // Put unpaid (false) before paid (true)
           return a.feesstatus ? 1 : -1;
         });
-
+        console.log("data", updatedData)
         setData(updatedData);
         setFilteredData(sortedData);
       } catch (err) {
@@ -220,8 +220,8 @@ const Table = () => {
             <AnimatePresence>
               {filteredData.length > 0 ? (
                 filteredData.map((row, index) => (
-                  <motion.tr 
-                    key={row.id} 
+                  <motion.tr
+                    key={row.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
@@ -229,17 +229,20 @@ const Table = () => {
                   >
                     <td className="px-4 py-4">
                       {row.imageUrl ? (
-                        <img 
-                          src={row.imageUrl} 
-                          alt={row.fullName} 
-                          className="w-10 h-10 rounded-full object-cover" 
+                        <img
+                          src={row.imageUrl}
+                          alt={row.fullName}
+                          className="w-10 h-10 rounded-full object-cover"
                         />
                       ) : (
                         <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
                       )}
                     </td>
                     <td className="px-4 py-4 font-medium text-gray-900 dark:text-white" onClick={handleRedirect}>
-                      <Link href={`/aboutPerson?${new URLSearchParams(row).toString()}`}>
+                      <Link href={`/aboutPerson?${new URLSearchParams({
+                        ...row,
+                        wp: JSON.stringify(row.wp), // Serialize wp
+                      }).toString()}`}>
                         {row.fullName}
                       </Link>
                     </td>
@@ -256,8 +259,11 @@ const Table = () => {
                       <StatusBadge status={row.feesstatus} />
                     </td>
                     <td className="px-4 py-4" onClick={handleRedirect}>
-                      <Link 
-                        href={`/editpersoninfo?${new URLSearchParams(row).toString()}`}
+                      <Link
+                        href={`/editpersoninfo?${new URLSearchParams({
+                          ...row,
+                          wp: JSON.stringify(row.wp), // Serialize wp
+                        }).toString()}`}
                         className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors"
                       >
                         Edit

@@ -13,19 +13,20 @@ import FloatingNavDemo from "../LandingPage/navbar";
 import WordPullUp from "@/components/ui/word-pull-up";
 import BottomNavbar from "../LandingPage/bottom-navbar";
 import LandingPageHeader from "../LandingPage/header";
+import { fstat } from "fs";
 // Interface for form data
 interface FormData {
   fullName: string | null;
   mobileNumber: string | null;
-  weight: string | null;
   membershipPlan: number;
+  wp: { weight: string; date: string }[];
 }
 
 // Interface for edit states
 interface EditStates {
   fullName: boolean;
   mobileNumber: boolean;
-  weight: boolean;
+  wp: boolean;
   membershipPlan: boolean;
 }
 
@@ -34,20 +35,21 @@ type FormField = keyof FormData;
 
 const EditProfilePage: React.FC = () => {
   const [isloading, setIsLoading] = useState(false);
+  const [weightProgress , setWeightProgress] = useState("")
   const supabase = createClient();
   const router = useRouter();
 
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     mobileNumber: "",
-    weight: "",
     membershipPlan: 0,
+    wp:[]
   });
 
   const [editStates, setEditStates] = useState<EditStates>({
     fullName: false,
     mobileNumber: false,
-    weight: false,
+    wp: false,
     membershipPlan: true,
   });
 
@@ -58,11 +60,15 @@ const EditProfilePage: React.FC = () => {
     }));
   };
 
+  const updateWeight = (e: ChangeEvent<HTMLInputElement>)=>{
+    const {value} = e.target
+    setWeightProgress(value)
+  }
   const handleChange = (field: FormField, value: string | number): void => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFormData((prev) => {
+      const updatedFormData = { ...prev, [field]: value };
+      return updatedFormData;
+    });
   };
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault(); // Prevent the default form submission
@@ -70,7 +76,7 @@ const EditProfilePage: React.FC = () => {
 
     try {
       // Prepare the data for submission
-      const { fullName, mobileNumber, weight, membershipPlan } = formData;
+      const { fullName, mobileNumber, wp, membershipPlan } = formData;
 
       // Get the date of joining from URL params
       const dojString = param?.get("doj");
@@ -88,7 +94,7 @@ const EditProfilePage: React.FC = () => {
       const updateData: any = {
         fullName,
         mobileNumber,
-        weight,
+        wp:[...formData.wp , {weight:weightProgress , date:new Date().toLocaleDateString("en-CA")}],
         plan: `${membershipPlan} Month`,
       };
 
@@ -96,7 +102,6 @@ const EditProfilePage: React.FC = () => {
       if (isPlanModified && isActivePlan) {
         updateData.feesstatus = true;
       }
-
       const { data, error } = await supabase
         .from("personList")
         .update(updateData)
@@ -129,6 +134,7 @@ const EditProfilePage: React.FC = () => {
   };
   const [param, setParam] = useState<URLSearchParams | null>(null);
   const [plan, setPlan] = useState(0);
+
   useEffect(() => {
     const url = window.location.href;
     const urlObj = new URL(url);
@@ -138,9 +144,15 @@ const EditProfilePage: React.FC = () => {
       ...prev,
       fullName: param.get("fullName"),
       mobileNumber: param.get("mobileNumber"),
-      weight: param.get("weight"),
+      wp: JSON.parse(param.get('wp')??'[]'),
       membershipPlan: Number(param.get("plan")?.split(" ")[0]) ?? 0,
     }));
+    let parsingData = JSON.parse(param.get('wp')??'[]')
+    if(parsingData.length==0){
+      setWeightProgress("")
+    }else{
+      setWeightProgress(parsingData[parsingData.length-1].weight)
+    }
     setPlan(Number(param.get("plan")?.split(" ")[0]));
     console.log(param.get("plan"));
   }, []);
@@ -217,16 +229,16 @@ const EditProfilePage: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <Edit className="w-4 h-4 text-gray-500" />
                     <Switch
-                      checked={editStates.weight}
-                      onCheckedChange={() => handleToggle("weight")}
+                      checked={editStates.wp}
+                      onCheckedChange={() => handleToggle("wp")}
                     />
                   </div>
                 </div>
                 <Input
-                  type="number"
-                  value={formData.weight ?? ""}
-                  onChange={(e) => handleInputChange(e, "weight")}
-                  disabled={!editStates.weight}
+                  type="string"
+                  value={weightProgress}
+                  onChange={(e) => updateWeight(e)}
+                  disabled={!editStates.wp}
                   className="transition-all duration-300 focus:ring-2 focus:ring-blue-500"
                 />
               </div>

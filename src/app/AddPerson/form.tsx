@@ -134,7 +134,9 @@ export default function Form() {
           feesstatus: feesPaid,
           imagePath,
           weight,
-          wp:[weight]
+          wp:[{weight,
+            date:dateOfJoin
+          }]
         },
       ]);
 
