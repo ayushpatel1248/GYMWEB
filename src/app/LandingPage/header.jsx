@@ -17,7 +17,7 @@ const LandingPageHeader = () => {
           className="flex items-center space-x-3"
         >
           <div className="h-10 w-10">
-          <Image className="h-full w-full" src={logo}></Image>
+          <Image className="h-full w-full" src={logo} alt="img"></Image>
           </div>
           {/* <Dumbbell className="w-10 h-10 text-blue-600" /> */}
           <div className="pl-5">

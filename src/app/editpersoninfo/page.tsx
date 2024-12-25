@@ -5,21 +5,37 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+// import { Select } from "@/components/ui/select";
 import { createClient } from "../../utils/supabase/client";
 import Loader from "./../../components/ui/Loader";
-// import { redirect } from 'next/navigation'
 import { useRouter } from "next/navigation";
-import FloatingNavDemo from "../LandingPage/navbar";
-import WordPullUp from "@/components/ui/word-pull-up";
-import BottomNavbar from "../LandingPage/bottom-navbar";
 import LandingPageHeader from "../LandingPage/header";
-import { fstat } from "fs";
+import BottomNavbar from "../LandingPage/bottom-navbar";
+import { generateAndUploadInvoice } from "../../components/invoicegenerator";
+
+interface InvoiceData {
+  customerName: string;
+  mobileNumber: string;
+  amount: number;
+  paymentMode: "cash" | "upi";
+  planDuration: string;
+  validFrom: string;
+  validUntil: string;
+  invoiceNumber: string;
+}
 // Interface for form data
 interface FormData {
   fullName: string | null;
   mobileNumber: string | null;
   membershipPlan: number;
   wp: { weight: string; date: string }[];
+  transaction?: {
+    paymentDate: string;
+    mode: "cash" | "upi";
+    validUntil: string;
+    amount: number;
+    invoiceUrl: string;
+  }[];
 }
 
 // Interface for edit states
@@ -35,7 +51,9 @@ type FormField = keyof FormData;
 
 const EditProfilePage: React.FC = () => {
   const [isloading, setIsLoading] = useState(false);
-  const [weightProgress , setWeightProgress] = useState("")
+  const [weightProgress, setWeightProgress] = useState("");
+  const [totalFees, setTotalFees] = useState("");
+  const [paymentMode, setPaymentMode] = useState<"cash" | "upi">("cash");
   const supabase = createClient();
   const router = useRouter();
 
@@ -43,7 +61,8 @@ const EditProfilePage: React.FC = () => {
     fullName: "",
     mobileNumber: "",
     membershipPlan: 0,
-    wp:[]
+    wp: [],
+    transaction: [],
   });
 
   const [editStates, setEditStates] = useState<EditStates>({
@@ -52,6 +71,8 @@ const EditProfilePage: React.FC = () => {
     wp: false,
     membershipPlan: true,
   });
+  
+  type FormField = keyof EditStates;
 
   const handleToggle = (field: FormField): void => {
     setEditStates((prev) => ({
@@ -60,64 +81,102 @@ const EditProfilePage: React.FC = () => {
     }));
   };
 
-  const updateWeight = (e: ChangeEvent<HTMLInputElement>)=>{
-    const {value} = e.target
-    setWeightProgress(value)
-  }
+  const updateWeight = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setWeightProgress(value);
+  };
   const handleChange = (field: FormField, value: string | number): void => {
     setFormData((prev) => {
       const updatedFormData = { ...prev, [field]: value };
       return updatedFormData;
     });
   };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault();
     setIsLoading(true);
 
     try {
-      // Prepare the data for submission
-      const { fullName, mobileNumber, wp, membershipPlan } = formData;
-
-      // Get the date of joining from URL params
       const dojString = param?.get("doj");
       const doj = dojString ? new Date(dojString) : new Date();
 
       // Calculate plan expiry date
       const expiryDate = new Date(doj);
-      expiryDate.setMonth(expiryDate.getMonth() + membershipPlan);
+      expiryDate.setMonth(expiryDate.getMonth() + formData.membershipPlan);
 
-      // Check if current plan is being modified and expiry is in future
-      const isPlanModified = membershipPlan !== plan;
-      const isActivePlan = expiryDate > new Date();
+      // Check if plan is increased
+
+      const isPlanIncreased = formData.membershipPlan > plan;
+
+      // Create new transaction if plan is increased
+      let newTransaction;
+      if (isPlanIncreased && totalFees) {
+        const validFromTemp = new Date(doj);
+        validFromTemp.setMonth(validFromTemp.getMonth() + plan)
+        const invoiceData: InvoiceData = {
+          customerName: formData.fullName?.toString() ?? "",
+          mobileNumber: (formData.mobileNumber)?.toString() ?? "",
+          amount: Number(totalFees),
+          paymentMode,
+          planDuration: (formData.membershipPlan - plan).toString(),
+          validFrom: validFromTemp.toISOString().split("T")[0],
+          validUntil: expiryDate.toISOString().split("T")[0],
+          invoiceNumber: `INV-${Date.now()}-${Math.floor(
+            Math.random() * 1000
+          )}`,
+        };
+        console.log(invoiceData, "this is data");
+
+        const invoiceUrl = await generateAndUploadInvoice(invoiceData);
+        newTransaction = {
+          paymentDate: new Date().toISOString().split("T")[0],
+          mode: paymentMode,
+          validUntil: expiryDate.toISOString().split("T")[0],
+          amount: Number(totalFees),
+          invoiceUrl,
+        };
+      }
 
       // Prepare update object
       const updateData: any = {
-        fullName,
-        mobileNumber,
-        wp: formData.wp.length < 7
-          ? [...formData.wp, { weight: weightProgress, date: new Date().toLocaleDateString("en-CA") }]
-          : [...formData.wp.slice(1), { weight: weightProgress, date: new Date().toLocaleDateString("en-CA") }],
-        plan: `${membershipPlan} Month`,
+        fullName: formData.fullName,
+        mobileNumber: formData.mobileNumber,
+        wp:
+          formData.wp.length < 7
+            ? [
+                ...formData.wp,
+                {
+                  weight: weightProgress,
+                  date: new Date().toLocaleDateString("en-CA"),
+                },
+              ]
+            : [
+                ...formData.wp.slice(1),
+                {
+                  weight: weightProgress,
+                  date: new Date().toLocaleDateString("en-CA"),
+                },
+              ],
+        plan: `${formData.membershipPlan} Month`,
       };
-      
 
-      // Conditionally add status if plan is modified and active
-      if (isPlanModified && isActivePlan) {
-        updateData.feesstatus = true;
+      // Add new transaction if plan is increased
+      if (newTransaction) {
+        updateData.transaction = [
+          ...(formData.transaction || []),
+          newTransaction,
+        ];
       }
+
       const { data, error } = await supabase
         .from("personList")
         .update(updateData)
         .eq("id", param?.get("id"));
 
-      // Handle success or error
       if (error) {
         console.error("Error updating data:", error.message);
-        // alert('Failed to update profile. Please try again.');
       } else {
         router.push("/");
-        // console.log('Data updated successfully:', data);
-        // alert('Profile updated successfully!');
       }
     } catch (err) {
       if (err instanceof Error) console.log(err.message);
@@ -127,7 +186,6 @@ const EditProfilePage: React.FC = () => {
     }
   };
 
-  // Input change handler with type safety
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement>,
     field: FormField
@@ -135,6 +193,7 @@ const EditProfilePage: React.FC = () => {
     const value = e.target.value;
     handleChange(field, value);
   };
+
   const [param, setParam] = useState<URLSearchParams | null>(null);
   const [plan, setPlan] = useState(0);
 
@@ -147,32 +206,26 @@ const EditProfilePage: React.FC = () => {
       ...prev,
       fullName: param.get("fullName"),
       mobileNumber: param.get("mobileNumber"),
-      wp: JSON.parse(param.get('wp')??'[]'),
+      wp: JSON.parse(param.get("wp") ?? "[]"),
       membershipPlan: Number(param.get("plan")?.split(" ")[0]) ?? 0,
+      transaction: JSON.parse(param.get("transaction") ?? "[]"),
     }));
-    let parsingData = JSON.parse(param.get('wp')??'[]')
-    if(parsingData.length==0){
-      setWeightProgress("")
-    }else{
-      setWeightProgress(parsingData[parsingData.length-1].weight)
+    let parsingData = JSON.parse(param.get("wp") ?? "[]");
+    if (parsingData.length == 0) {
+      setWeightProgress("");
+    } else {
+      setWeightProgress(parsingData[parsingData.length - 1].weight);
     }
     setPlan(Number(param.get("plan")?.split(" ")[0]));
-    console.log(param.get("plan"));
   }, []);
 
-  return isloading == true ? (
+  return isloading ? (
     <div className="w-full flex justify-center h-screen items-center">
       <Loader />
     </div>
   ) : (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 pb-24">
-      {/* <FloatingNavDemo />
-      <WordPullUp
-        className="text-4xl font-bold tracking-[-0.02em] text-blue-700 dark:text-white md:text-7xl md:leading-[5rem]"
-        words="SR Fitness"
-      />
-      <div className="h-20"></div> */}
-       <LandingPageHeader />
+      <LandingPageHeader />
       <BottomNavbar />
       <div className="min-h-screen bg-gray-50 p-8">
         <Card className="max-w-2xl mx-auto">
@@ -183,7 +236,7 @@ const EditProfilePage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Full Name Field */}
+              {/* Existing fields remain the same */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium">Full Name</label>
@@ -300,6 +353,36 @@ const EditProfilePage: React.FC = () => {
                   </Button>
                 </div>
               </div>
+
+              {/* Show payment fields only when plan is increased */}
+              {formData.membershipPlan > plan && (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Total Fees</label>
+                    <Input
+                      type="number"
+                      value={totalFees}
+                      onChange={(e) => setTotalFees(e.target.value)}
+                      className="transition-all duration-300 focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Payment Mode</label>
+                    <select
+                      value={paymentMode}
+                      onChange={(e) =>
+                        setPaymentMode(e.target.value as "cash" | "upi")
+                      }
+                      className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    >
+                      <option value="cash">Cash</option>
+                      <option value="upi">UPI</option>
+                    </select>
+                  </div>
+                </>
+              )}
 
               {/* Submit Button */}
               <Button

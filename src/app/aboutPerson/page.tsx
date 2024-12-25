@@ -32,6 +32,7 @@ import FloatingNavDemo from "../LandingPage/navbar";
 import WordPullUp from "@/components/ui/word-pull-up";
 import BottomNavbar from "../LandingPage/bottom-navbar";
 import LandingPageHeader from "../LandingPage/header";
+import TransactionHistory from "./Transactionhistory";
 
 // Types and Interfaces
 type Gender = "male" | "female" | "other";
@@ -207,8 +208,9 @@ const aboutPerson: React.FC = () => {
             <Card className="overflow-hidden transition-transform duration-300 hover:scale-105">
               <CardContent className="pt-6">
                 <div
-                  className={`aspect-square rounded-full overflow-hidden mb-4 border-4 transform hover:rotate-6 transition-transform duration-300 border-${user.gender === "male" ? "blue" : "pink"
-                    }-500`}
+                  className={`aspect-square rounded-full overflow-hidden mb-4 border-4 transform hover:rotate-6 transition-transform duration-300 border-${
+                    user.gender === "male" ? "blue" : "pink"
+                  }-500`}
                 >
                   <img
                     src={
@@ -231,12 +233,14 @@ const aboutPerson: React.FC = () => {
                 </h2>
                 <div className="flex justify-center gap-2 text-sm">
                   <Trophy
-                    className={`w-4 h-4 ${user.gender === "male" ? "text-blue-700" : "text-blue-700"
-                      } animate-pulse`}
+                    className={`w-4 h-4 ${
+                      user.gender === "male" ? "text-blue-700" : "text-blue-700"
+                    } animate-pulse`}
                   />
                   <span
-                    className={`${user.gender === "male" ? "text-blue-700" : "text-blue-700"
-                      } font-medium`}
+                    className={`${
+                      user.gender === "male" ? "text-blue-700" : "text-blue-700"
+                    } font-medium`}
                   >
                     {param?.get("plan")} Member
                   </span>
@@ -257,20 +261,22 @@ const aboutPerson: React.FC = () => {
                 {contactItems.map((item, index) => (
                   <div
                     key={index}
-                    className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 hover:bg-gradient-to-r ${index === 0
+                    className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 hover:bg-gradient-to-r ${
+                      index === 0
                         ? user.gender === "male"
                           ? "hover:from-blue-50 hover:to-blue-100"
                           : "hover:from-pink-50 hover:to-pink-100"
                         : "hover:from-purple-50 hover:to-blue-50"
-                      } group`}
+                    } group`}
                   >
                     <span
-                      className={`transition-colors duration-300 ${index === 0
+                      className={`transition-colors duration-300 ${
+                        index === 0
                           ? user.gender === "male"
                             ? "text-blue-500 group-hover:text-blue-600"
                             : "text-pink-500 group-hover:text-pink-600"
                           : "text-purple-500 group-hover:text-purple-600"
-                        }`}
+                      }`}
                     >
                       {item.icon}
                     </span>
@@ -301,22 +307,22 @@ const aboutPerson: React.FC = () => {
                   </div>
                 </div> */}
                 <div className="space-y-2">
-                {JSON.parse(param?.get('wp')??'[]')?.map((record:{date:string,
-                  weight:number
-                }) => (
-                  <div
-                    key={record.date}
-                    className="flex justify-between items-center p-2 rounded-lg transition-all duration-300 hover:bg-gray-50"
-                  >
-                    <span className="text-sm text-purple-600">
-                      {record.date}
-                    </span>
-                    <span className="font-medium text-blue-600">
-                      {record.weight} kg
-                    </span>
-                  </div>
-                ))}
-              </div>
+                  {JSON.parse(param?.get("wp") ?? "[]")?.map(
+                    (record: { date: string; weight: number }) => (
+                      <div
+                        key={record.date}
+                        className="flex justify-between items-center p-2 rounded-lg transition-all duration-300 hover:bg-gray-50"
+                      >
+                        <span className="text-sm text-purple-600">
+                          {record.date}
+                        </span>
+                        <span className="font-medium text-blue-600">
+                          {record.weight} kg
+                        </span>
+                      </div>
+                    )
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -332,43 +338,52 @@ const aboutPerson: React.FC = () => {
               {/* remaining date */}
               <div
                 className={`p-4 rounded-lg border transition-all duration-300 transform hover:scale-105 hover:shadow-lg
-                ${Number(param?.get("remainingDays")) >= 0
+                ${
+                  Number(param?.get("remainingDays")) >= 0
                     ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-green-100"
                     : "bg-gradient-to-r from-red-50 to-red-50 border-red-200 hover:shadow-red-100"
-                  }  `}
-              // bg-gradient-to-r from-red-50 to-rose-50 border-red-200 hover:shadow-red-100
+                }  `}
+                // bg-gradient-to-r from-red-50 to-rose-50 border-red-200 hover:shadow-red-100
               >
                 <div className="flex items-center justify-between">
                   <div>
                     <div
-                      className={`text-sm ${Number(param?.get("remainingDays")) >= 0
+                      className={`text-sm ${
+                        Number(param?.get("remainingDays")) >= 0
                           ? "text-gray-600"
                           : "text-red-900"
-                        }`}
+                      }`}
                     >
                       {param?.get("remainingDays")}
                     </div>
                     <div
-                      className={`font-medium ${Number(param?.get("remainingDays")) >= 0
+                      className={`font-medium ${
+                        Number(param?.get("remainingDays")) >= 0
                           ? "text-emerald-600"
                           : "text-red-800"
-                        }`}
+                      }`}
                     >
                       {/* text-rose-600 */}
                       days remain
                     </div>
                   </div>
                   <Calendar
-                    className={`w-5 h-5 transition-transform duration-300 hover:scale-110 ${Number(param?.get("remainingDays")) >= 0
+                    className={`w-5 h-5 transition-transform duration-300 hover:scale-110 ${
+                      Number(param?.get("remainingDays")) >= 0
                         ? "text-emerald-500"
                         : "text-red-800"
-                      }`}
+                    }`}
                   />
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
+        <div>
+          <TransactionHistory
+            allTransactions={JSON.parse(param?.get("transaction") ?? "[]") }
+          />
+        </div>
         {/* Join Date */}
         <div className="flex items-center justify-center gap-2 p-4 rounded-full bg-gradient-to-r from-purple-50 to-blue-50 transform transition-all duration-300 hover:shadow-lg hover:scale-105">
           <Clock className="w-4 h-4 text-purple-500" />
@@ -414,8 +429,9 @@ const aboutPerson: React.FC = () => {
               <AlertDialogTrigger asChild>
                 <button
                   disabled={loading}
-                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 ${loading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
                   {loading ? (
                     <>

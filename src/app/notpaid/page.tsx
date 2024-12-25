@@ -254,6 +254,7 @@ const NotPaid = () => {
                       <Link href={`/aboutPerson?${new URLSearchParams({
                         ...row,
                         wp: JSON.stringify(row.wp), // Serialize wp
+                        transaction: JSON.stringify(row.transaction)
                       }).toString()}`}>
                         {row.fullName}
                       </Link>
@@ -275,6 +276,7 @@ const NotPaid = () => {
                         href={`/editpersoninfo?${new URLSearchParams({
                           ...row,
                           wp: JSON.stringify(row.wp), // Serialize wp
+                          transaction: JSON.stringify(row.transaction)
                         }).toString()}`}
                         className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors"
                       >
