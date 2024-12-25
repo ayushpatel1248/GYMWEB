@@ -251,13 +251,12 @@ const NotPaid = () => {
                         )}
                       </td>
                       <td className="px-4 py-4 font-medium text-gray-900 dark:text-white">
-                        <Link
-                          href={`/aboutPerson?${new URLSearchParams(
-                            row
-                          ).toString()}`}
-                        >
-                          {row.fullName}
-                        </Link>
+                      <Link href={`/aboutPerson?${new URLSearchParams({
+                        ...row,
+                        wp: JSON.stringify(row.wp), // Serialize wp
+                      }).toString()}`}>
+                        {row.fullName}
+                      </Link>
                       </td>
                       <td className="px-4 py-4 text-gray-500 dark:text-gray-300">
                         {new Date(row.doj).toLocaleDateString("en-GB")}
@@ -272,14 +271,15 @@ const NotPaid = () => {
                         <StatusBadge status={row.feesstatus} />
                       </td>
                       <td className="px-4 py-4">
-                        <Link
-                          href={`/editpersoninfo?${new URLSearchParams(
-                            row
-                          ).toString()}`}
-                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors"
-                        >
-                          Edit
-                        </Link>
+                      <Link
+                        href={`/editpersoninfo?${new URLSearchParams({
+                          ...row,
+                          wp: JSON.stringify(row.wp), // Serialize wp
+                        }).toString()}`}
+                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors"
+                      >
+                        Edit
+                      </Link>
                       </td>
                     </motion.tr>
                   ))
