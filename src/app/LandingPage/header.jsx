@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Dumbbell, Bell, UserCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import logo from "../../../public/asseet/landingpage/gymcirclelogo.png";
+import Link from "next/link";
+
 const LandingPageHeader = () => {
   return (
     <div className="bg-white shadow-md">
@@ -38,9 +40,9 @@ const LandingPageHeader = () => {
             <span className="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
           </button>
 
-          <button className="hover:bg-gray-100 p-2 rounded-full transition-colors">
+          <Link href="/dashboard" className="hover:bg-gray-100 p-2 rounded-full transition-colors">
             <UserCircle className="w-7 h-7 text-gray-600" />
-          </button>
+          </Link>
         </motion.div>
       </div>
     </div>
