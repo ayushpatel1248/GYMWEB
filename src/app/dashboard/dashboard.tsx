@@ -126,7 +126,7 @@ const Dashboard = () => {
       </div>
 
       {/* Recent Transactions and Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4">Recent Transactions</h2>
           <div className="space-y-2">
