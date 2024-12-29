@@ -5,7 +5,19 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { createClient } from "../../utils/supabase/client";
 import { ChangeEvent, useState, FormEvent, useEffect } from "react";
-import "./addperson.css"
+import "./addperson.css";
+import { generateAndUploadInvoice } from "../../components/invoicegenerator";
+
+interface InvoiceData {
+  customerName: string;
+  mobileNumber: string;
+  amount: number;
+  paymentMode: "cash" | "upi";
+  planDuration: string;
+  validFrom: string;
+  validUntil: string;
+  invoiceNumber: string;
+}
 // Function to compress image
 const compressImage = async (file: File): Promise<File> => {
   return new Promise((resolve, reject) => {
@@ -78,6 +90,7 @@ export default function Form() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [weight, setWeight] = useState("");
+  const [paymentMode, setPaymentMode] = useState<"cash" | "upi">("cash");
 
   // Effect to update membership plan when fees status changes
   useEffect(() => {
@@ -88,7 +101,7 @@ export default function Form() {
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    console.log(files)
+    console.log(files);
     if (files && files.length > 0) {
       try {
         const compressedImage = await compressImage(files[0]);
@@ -124,19 +137,59 @@ export default function Form() {
         imagePath = storageData.path;
       }
 
+      // Calculate validUntil date based on plan
+      const validUntil = new Date(dateOfJoin);
+      switch (membershipPlan) {
+        case "1 Month":
+          validUntil.setMonth(validUntil.getMonth() + 1);
+          break;
+        case "3 Month":
+          validUntil.setMonth(validUntil.getMonth() + 3);
+          break;
+        case "6 Month":
+          validUntil.setMonth(validUntil.getMonth() + 6);
+          break;
+        case "12 Month":
+          validUntil.setFullYear(validUntil.getFullYear() + 1);
+          break;
+        default:
+          break;
+      }
+
+      // Generate and upload invoice
+      const invoiceData: InvoiceData = {
+        customerName: fullName,
+        mobileNumber,
+        amount: Number(totalFees),
+        paymentMode,
+        planDuration: membershipPlan,
+        validFrom: dateOfJoin,
+        validUntil: validUntil.toISOString().split("T")[0],
+        invoiceNumber: `INV-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      };
+
+      const invoiceUrl = await generateAndUploadInvoice(invoiceData);
+
+      const transaction = {
+        paymentDate: dateOfJoin,
+        mode: paymentMode,
+        validUntil: validUntil.toISOString().split("T")[0],
+        amount: Number(totalFees),
+        invoiceUrl,
+      };
+
       const { data, error } = await supabase.from("personList").insert([
         {
           fullName,
           mobileNumber,
-          plan: !feesPaid ? "0 Month" : membershipPlan, // Ensure 0 Month is saved when fees not paid
+          plan: !feesPaid ? "0 Month" : membershipPlan,
           doj: dateOfJoin,
           totalfees: totalFees,
           feesstatus: feesPaid,
           imagePath,
           weight,
-          wp:[{weight,
-            date:dateOfJoin
-          }]
+          wp: [{ weight, date: dateOfJoin }],
+          transaction: [transaction],
         },
       ]);
 
@@ -153,6 +206,7 @@ export default function Form() {
         setFeesPaid(false);
         setImageFile(null);
         setWeight("");
+        setPaymentMode("cash");
       }
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -206,12 +260,14 @@ export default function Form() {
                           name="file-input"
                           id="file-input"
                           className="file-input__input-profile "
-                          accept='image/*'
+                          accept="image/*"
                           // capture="environment"
                           onChange={handleFileChange}
-
                         />
-                        <label className="file-input__label-profile bg-blue-700" htmlFor="file-input">
+                        <label
+                          className="file-input__label-profile bg-blue-700"
+                          htmlFor="file-input"
+                        >
                           <svg
                             aria-hidden="true"
                             focusable="false"
@@ -227,10 +283,17 @@ export default function Form() {
                               d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"
                             ></path>
                           </svg>
-                          {
-                            (imageFile?.name.length == undefined ? 0 : imageFile?.name.length  > 10) ? imageFile?.name?.substr(0, 6):
-                            <span>{imageFile?.name ?? "Update Image Photo"}</span>
-                          }
+                          {(
+                            imageFile?.name.length == undefined
+                              ? 0
+                              : imageFile?.name.length > 10
+                          ) ? (
+                            imageFile?.name?.substr(0, 6)
+                          ) : (
+                            <span>
+                              {imageFile?.name ?? "Update Image Photo"}
+                            </span>
+                          )}
                         </label>
                       </div>
                     </span>
@@ -238,18 +301,36 @@ export default function Form() {
                   {/* camera option */}
                   <div className="buttonn">
                     <span>
-                      <div >
+                      <div>
                         <input
                           type="file"
                           name="file-camera"
                           id="file-camera"
                           className="file-input__input-profile "
-                          accept='image/*'
+                          accept="image/*"
                           capture="environment"
                           onChange={handleFileChange}
                         />
                         <label className="" htmlFor="file-camera">
-                          <span className="lablee"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" fill="none" className="svg-icon"><g stroke-width="2" stroke-linecap="round" stroke="#fff" fill-rule="evenodd" clip-rule="evenodd"><path d="m4 9c0-1.10457.89543-2 2-2h2l.44721-.89443c.33879-.67757 1.03131-1.10557 1.78889-1.10557h3.5278c.7576 0 1.4501.428 1.7889 1.10557l.4472.89443h2c1.1046 0 2 .89543 2 2v8c0 1.1046-.8954 2-2 2h-12c-1.10457 0-2-.8954-2-2z"></path><path d="m15 13c0 1.6569-1.3431 3-3 3s-3-1.3431-3-3 1.3431-3 3-3 3 1.3431 3 3z"></path></g></svg>
+                          <span className="lablee">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              height="24"
+                              fill="none"
+                              className="svg-icon"
+                            >
+                              <g
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke="#fff"
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                              >
+                                <path d="m4 9c0-1.10457.89543-2 2-2h2l.44721-.89443c.33879-.67757 1.03131-1.10557 1.78889-1.10557h3.5278c.7576 0 1.4501.428 1.7889 1.10557l.4472.89443h2c1.1046 0 2 .89543 2 2v8c0 1.1046-.8954 2-2 2h-12c-1.10457 0-2-.8954-2-2z"></path>
+                                <path d="m15 13c0 1.6569-1.3431 3-3 3s-3-1.3431-3-3 1.3431-3 3-3 3 1.3431 3 3z"></path>
+                              </g>
+                            </svg>
                           </span>
                         </label>
                       </div>
@@ -404,6 +485,26 @@ export default function Form() {
                   <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600"></div>
                 </label>
               </div>
+              <div className="sm:col-span-4">
+                <label
+                  htmlFor="payment-mode"
+                  className="block text-sm/6 font-medium text-gray-900"
+                >
+                  Payment Mode
+                </label>
+                <select
+                  id="payment-mode"
+                  name="payment-mode"
+                  value={paymentMode}
+                  onChange={(e) =>
+                    setPaymentMode(e.target.value as "cash" | "upi")
+                  }
+                  className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                >
+                  <option value="cash">Cash</option>
+                  <option value="upi">UPI</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -449,7 +550,7 @@ export default function Form() {
             )}
           </button>
         </div>
-      </form >
-    </div >
+      </form>
+    </div>
   );
 }

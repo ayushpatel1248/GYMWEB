@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Dumbbell, Bell, UserCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import logo from "../../../public/asseet/landingpage/gymcirclelogo.png";
+import Link from "next/link";
+
 const LandingPageHeader = () => {
   return (
     <div className="bg-white shadow-md">
@@ -17,7 +19,7 @@ const LandingPageHeader = () => {
           className="flex items-center space-x-3"
         >
           <div className="h-10 w-10">
-          <Image className="h-full w-full" src={logo}></Image>
+          <Image className="h-full w-full" src={logo} alt="img"></Image>
           </div>
           {/* <Dumbbell className="w-10 h-10 text-blue-600" /> */}
           <div className="pl-5">
@@ -38,9 +40,9 @@ const LandingPageHeader = () => {
             <span className="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
           </button>
 
-          <button className="hover:bg-gray-100 p-2 rounded-full transition-colors">
+          <Link href="/dashboard" className="hover:bg-gray-100 p-2 rounded-full transition-colors">
             <UserCircle className="w-7 h-7 text-gray-600" />
-          </button>
+          </Link>
         </motion.div>
       </div>
     </div>
