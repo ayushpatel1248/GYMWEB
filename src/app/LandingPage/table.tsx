@@ -12,9 +12,9 @@ interface StatusBadgeProps {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => (
   <span
     className={`px-3 py-1 rounded-full text-xs font-semibold 
-    ${status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+    ${status ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
   >
-    {status ? 'Paid' : 'Unpaid'}
+    {status ? "Paid" : "Unpaid"}
   </span>
 );
 
@@ -152,7 +152,7 @@ const Table = () => {
           // Put unpaid (false) before paid (true)
           return a.feesstatus ? 1 : -1;
         });
-        console.log("data", updatedData)
+        console.log("data", updatedData);
         setData(updatedData);
         setFilteredData(sortedData);
       } catch (err) {
@@ -209,8 +209,19 @@ const Table = () => {
         <table className="w-full">
           <thead className="bg-gray-100 dark:bg-gray-700">
             <tr>
-              {['Image', 'Name', 'Date of Join', 'Fees', 'Plan', 'Status', 'Actions'].map(header => (
-                <th key={header} className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              {[
+                "Image",
+                "Name",
+                "Date of Join",
+                "Fees",
+                "Plan",
+                "Status",
+                "Actions",
+              ].map((header) => (
+                <th
+                  key={header}
+                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
                   {header}
                 </th>
               ))}
@@ -238,15 +249,21 @@ const Table = () => {
                         <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
                       )}
                     </td>
-                    <td className="px-4 py-4 font-medium text-gray-900 dark:text-white" onClick={handleRedirect}>
-                      <Link href={`/aboutPerson?${new URLSearchParams({
-                        ...row,
-                        wp: JSON.stringify(row.wp), // Serialize wp
-                        transaction: JSON.stringify(row.transaction)
-                      }).toString()}`}>
-                        {row.fullName}
+
+                    <td
+                      className="px-4 py-4 font-medium text-gray-900 dark:text-white"
+                    >
+                      <Link
+                        href={`/aboutPerson?${new URLSearchParams({
+                          ...row,
+                          wp: JSON.stringify(row.wp), // Serialize wp
+                          transaction: JSON.stringify(row.transaction),
+                        }).toString()}`}
+                      >
+                        <span  onClick={handleRedirect}>{row.fullName}</span>
                       </Link>
                     </td>
+
                     <td className="px-4 py-4 text-gray-500 dark:text-gray-300">
                       {new Date(row.doj).toLocaleDateString("en-GB")}
                     </td>
@@ -259,23 +276,27 @@ const Table = () => {
                     <td className="px-4 py-4">
                       <StatusBadge status={row.feesstatus} />
                     </td>
-                    <td className="px-4 py-4" onClick={handleRedirect}>
+
+                    <td className="px-4 py-4">
                       <Link
                         href={`/editpersoninfo?${new URLSearchParams({
                           ...row,
                           wp: JSON.stringify(row.wp), // Serialize wp
-                          transaction: JSON.stringify(row.transaction)
+                          transaction: JSON.stringify(row.transaction),
                         }).toString()}`}
                         className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors"
                       >
-                        Edit
+                        <span onClick={handleRedirect}>Edit</span>
                       </Link>
                     </td>
                   </motion.tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  <td
+                    colSpan={7}
+                    className="text-center py-8 text-gray-500 dark:text-gray-400"
+                  >
                     No members found
                   </td>
                 </tr>
