@@ -88,6 +88,20 @@ const Table = () => {
         console.error("Error in updateMembershipStatus:", err);
       }
     }
+    // else if (remainingDays > 0) {
+    //   try {
+    //     const { error } = await supabase
+    //       .from("personList")
+    //       .update({ feesstatus: true })
+    //       .eq("id", userId);
+
+    //     if (error) {
+    //       console.error("Error updating membership status:", error);
+    //     }
+    //   } catch (err) {
+    //     console.error("Error in updateMembershipStatus:", err);
+    //   }
+    // }
   };
 
   useEffect(() => {

@@ -167,6 +167,11 @@ const EditProfilePage: React.FC = () => {
           newTransaction,
         ];
       }
+      const isPlanModified = formData.membershipPlan !== plan;
+      const isActivePlan = expiryDate > new Date();
+      if (isPlanModified && isActivePlan) {
+        updateData.feesstatus = true;
+      }
 
       const { data, error } = await supabase
         .from("personList")
