@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 // import { CustomProvider } from 'rsuite';
 // import 'rsuite/dist/rsuite-no-reset.min.css';
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -16,9 +17,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  manifest:"/manifest.json",
+  manifest: "/manifest.json",
   title: "SR Fitness",
-  description: ""
+  description: "",
 };
 
 export default function RootLayout({
@@ -31,7 +32,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-       {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
         {/* {children} */}
       </body>
     </html>

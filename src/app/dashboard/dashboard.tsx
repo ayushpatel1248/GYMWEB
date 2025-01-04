@@ -68,8 +68,8 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Gym Dashboard</h1>
+    <div className="p-4 sm:p-6 md:p-8 bg-gray-100 dark:bg-zinc-900 min-h-screen">
+      <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">Gym Dashboard</h1>
       
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -101,7 +101,7 @@ const Dashboard = () => {
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white dark:bg-black p-4 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4">Monthly Earnings</h2>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={dashboardData.earningsData}>
@@ -114,7 +114,7 @@ const Dashboard = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white dark:bg-black p-4 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4">Member Statistics</h2>
           <div className="space-y-4">
             <Stat label="Total Members" value={dashboardData.totalMembers.toString()} />
@@ -127,7 +127,7 @@ const Dashboard = () => {
 
       {/* Recent Transactions and Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white dark:bg-black p-4 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4">Recent Transactions</h2>
           <div className="space-y-2">
             {dashboardData.recentTransactions.map((transaction: Transaction , index:number) => (
@@ -141,7 +141,7 @@ const Dashboard = () => {
             )) }
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white dark:bg-black p-4 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
           <div className="grid grid-cols-2 gap-4">
             <Link href="/AddPerson"><QuickActionButton label="Add Member" /></Link>
@@ -156,12 +156,12 @@ const Dashboard = () => {
 };
 
 const SummaryCard : React.FC<SummaryCardProps> = ({ title, value, trend, icon }) => (
-  <div className="bg-white p-4 rounded-lg shadow">
+  <div className="bg-white dark:bg-black p-4 rounded-lg shadow">
     <div className="flex items-center justify-between mb-2">
-      <div className="text-sm font-medium text-gray-500">{title}</div>
+      <div className="text-sm font-medium text-gray-500 dark:text-white">{title}</div>
       {icon}
     </div>
-    <div className="text-2xl font-bold text-gray-800">{value}</div>
+    <div className="text-2xl font-bold text-gray-800 dark:text-white">{value}</div>
     <div className={`flex items-center text-sm ${trend >= 0 ? 'text-green-500' : 'text-red-500'}`}>
       {trend >= 0 ? <ArrowUpRight className="h-4 w-4 mr-1" /> : <ArrowDownRight className="h-4 w-4 mr-1" />}
       <span>{Math.abs(trend)}% from last month</span>
@@ -171,19 +171,19 @@ const SummaryCard : React.FC<SummaryCardProps> = ({ title, value, trend, icon })
 
 const Stat: React.FC<StatProps> = ({ label, value }) => (
   <div className="flex justify-between items-center">
-    <span className="text-gray-600">{label}</span>
-    <span className="font-semibold text-gray-800">{value}</span>
+    <span className="text-gray-600 dark:text-white">{label}</span>
+    <span className="font-semibold text-gray-800 dark:text-white">{value}</span>
   </div>
 );
 
 const Transaction:React.FC<TransactionProps> = ({ name, amount, date, type }) => (
   <div className="flex justify-between items-center py-2 border-b last:border-b-0">
     <div>
-      <div className="font-medium text-gray-800">{name}</div>
-      <div className="text-sm text-gray-500">{date}</div>
+      <div className="font-medium text-gray-800 dark:text-white">{name}</div>
+      <div className="text-sm text-gray-500 dark:text-white">{date}</div>
     </div>
     <div className="text-right">
-      <div className="font-medium text-gray-800">{amount}</div>
+      <div className="font-medium text-gray-800 dark:text-white">{amount}</div>
       <div className={`text-sm ${type === 'UPI' ? 'text-purple-600' : 'text-green-600'}`}>{type}</div>
     </div>
   </div>

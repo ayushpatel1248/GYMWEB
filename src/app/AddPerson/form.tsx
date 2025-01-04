@@ -221,7 +221,7 @@ export default function Form() {
       <form onSubmit={handleFormSubmit}>
         <div className="space-y-12">
           <div>
-            <h2 className="text-base/7 font-semibold text-gray-900 border bg-slate-200 text-center rounded-lg">
+            <h2 className="text-base/7 font-semibold text-gray-900 border dark:border-none bg-slate-200 dark:bg-black dark:text-white  text-center rounded-lg">
               Add Person
             </h2>
 
@@ -229,7 +229,7 @@ export default function Form() {
               <div className="col-span-full">
                 <label
                   htmlFor="photo"
-                  className="block text-sm/6 font-medium text-gray-900"
+                  className="block text-sm/6 font-medium text-gray-900 dark:text-white"
                 >
                   Add Photo
                 </label>
@@ -343,7 +343,7 @@ export default function Form() {
 
           {/* Personal Information Fields */}
           <div className="border-b border-gray-900/10 pb-5">
-            <h2 className="text-base/7 font-semibold text-gray-900">
+            <h2 className="text-base/7 font-semibold text-gray-900  dark:text-white">
               Personal Information
             </h2>
 
@@ -351,7 +351,7 @@ export default function Form() {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="full-name"
-                  className="block text-sm/6 font-medium text-gray-900"
+                  className="block text-sm/6 font-medium text-gray-900 dark:text-white"
                 >
                   Full Name
                 </label>
@@ -362,7 +362,7 @@ export default function Form() {
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
@@ -370,7 +370,7 @@ export default function Form() {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="mobile-number"
-                  className="block text-sm/6 font-medium text-gray-900"
+                  className="block text-sm/6 font-medium text-gray-900 dark:text-white"
                 >
                   Mobile Number
                 </label>
@@ -381,14 +381,14 @@ export default function Form() {
                     type="number"
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value)}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
               <div className="sm:col-span-3">
                 <label
                   htmlFor="weight"
-                  className="block text-sm/6 font-medium text-gray-900"
+                  className="block text-sm/6 font-medium text-gray-900 dark:text-white"
                 >
                   Weight
                 </label>
@@ -399,14 +399,14 @@ export default function Form() {
                     type="number"
                     value={weight}
                     onChange={(e) => setWeight(e.target.value)}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
 
               <Menu as="div" className="relative inline-block text-left">
                 <div>
-                  <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                  <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white dark:bg-black dark:text-white px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                     {membershipPlan} Membership Plan
                     <ChevronDownIcon
                       aria-hidden="true"
@@ -417,7 +417,7 @@ export default function Form() {
 
                 <MenuItems
                   as="div"
-                  className="absolute z-10 mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+                  className="absolute z-10 mt-2 w-56 rounded-md bg-white dark:bg-black shadow-lg ring-1 ring-black ring-opacity-5"
                 >
                   {["1 Month", "3 Month", "6 Month", "12 Month"].map((plan) => (
                     <MenuItem
@@ -435,7 +435,7 @@ export default function Form() {
               <div className="sm:col-span-4">
                 <label
                   htmlFor="date"
-                  className="block text-sm/6 font-medium text-gray-900"
+                  className="block text-sm/6 font-medium text-gray-900 dark:text-white"
                 >
                   Date Of Join
                 </label>
@@ -446,14 +446,14 @@ export default function Form() {
                     type="date"
                     value={dateOfJoin}
                     onChange={(e) => setDateOfJoin(e.target.value)}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
               <div className="sm:col-span-4">
                 <label
                   htmlFor="number"
-                  className="block text-sm/6 font-medium text-gray-900"
+                  className="block text-sm/6 font-medium text-gray-900 dark:text-white"
                 >
                   Total Fees
                 </label>
@@ -464,14 +464,14 @@ export default function Form() {
                     type="number"
                     value={totalFees}
                     onChange={(e) => setTotalFees(e.target.value)}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
               <div className="sm:col-span-4">
                 <label
                   htmlFor="fees-paid"
-                  className="block text-sm/6 font-medium text-gray-900"
+                  className="block text-sm/6 font-medium text-gray-900 dark:text-white"
                 >
                   Fees Paid or Not
                 </label>
@@ -488,7 +488,7 @@ export default function Form() {
               <div className="sm:col-span-4">
                 <label
                   htmlFor="payment-mode"
-                  className="block text-sm/6 font-medium text-gray-900"
+                  className="block text-sm/6 font-medium text-gray-900 dark:text-white"
                 >
                   Payment Mode
                 </label>
@@ -499,7 +499,7 @@ export default function Form() {
                   onChange={(e) =>
                     setPaymentMode(e.target.value as "cash" | "upi")
                   }
-                  className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900  ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 >
                   <option value="cash">Cash</option>
                   <option value="upi">UPI</option>
@@ -512,7 +512,7 @@ export default function Form() {
         <div className="mt-6 flex items-center justify-end gap-x-6">
           <button
             type="button"
-            className="text-sm/6 font-semibold text-gray-900"
+            className="text-sm/6 font-semibold text-gray-900 dark:text-white"
           >
             Cancel
           </button>
