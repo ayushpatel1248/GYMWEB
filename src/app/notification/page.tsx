@@ -17,13 +17,13 @@ const generateSuscribeEndPoint = async(registration:ServiceWorkerRegistration)=>
    const privateKey = 'xwMOs06ZYpRcTPKmgsoq8YWsHhGj_JQLqLyNkOb6yZk'
     const options={
         applicationServerKey :urlBase64ToUint8Array(publicKey) ,
-        userVisiblOnly:true
+        userVisibleOnly:true
     }
     try {
         const subscription = await registration.pushManager.subscribe(options);
         const supabase = createClient();
         const { error } = await supabase
-          .from("notificatin")
+          .from("notification")
           .insert({ notification_json: JSON.stringify(subscription) });
         if (error) {
           console.error("Error inserting subscription:", error.message);
