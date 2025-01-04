@@ -13,7 +13,9 @@ const BottomNavbar = () => {
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       setUser(user);
     };
 
@@ -47,7 +49,7 @@ const BottomNavbar = () => {
       name: "NotPaid",
       link: "/notpaid",
       icon: Users,
-      onClick: undefined
+      onClick: undefined,
     },
     {
       name: "Logout",
@@ -60,7 +62,7 @@ const BottomNavbar = () => {
   return (
     <div className="fixed bottom-0 left-0 w-full z-50">
       <div className="w-full max-w-md mx-auto">
-        <div className="px-7 bg-white dark:bg-gray-800 shadow-lg rounded-t-2xl">
+        <div className="px-7 bg-white dark:bg-black shadow-lg rounded-t-2xl">
           <div className="flex">
             {navItems.map((item) => (
               <div key={item.link} className="flex-1 group">
@@ -68,7 +70,7 @@ const BottomNavbar = () => {
                   <button
                     onClick={item.onClick}
                     className={`w-full flex items-end justify-center text-center mx-auto px-4 pt-2 
-                      text-gray-400 hover:text-indigo-500 focus:outline-none`}
+                    text-gray-400 dark:text-gray-300 hover:text-indigo-500 dark:hover:text-indigo-400 focus:outline-none`}
                   >
                     <span className="block px-1 pt-1 pb-2">
                       <item.icon className="text-2xl pt-1 mb-1 block mx-auto" />
@@ -79,12 +81,13 @@ const BottomNavbar = () => {
                   <Link
                     href={item.link}
                     className={`flex items-end justify-center text-center mx-auto px-4 pt-2 w-full
-                      ${
-                        pathname === item.link
-                          ? "text-indigo-500 border-b-2 border-indigo-500"
-                          : "text-gray-400 border-b-2 border-transparent"
-                      }
-                      group-hover:text-indigo-500 group-hover:border-indigo-500`}
+                    ${
+                      pathname === item.link
+                        ? "text-indigo-500 dark:text-indigo-400 border-b-2 border-indigo-500 dark:border-indigo-400"
+                        : "text-gray-400 dark:text-gray-300 border-b-2 border-transparent"
+                    }
+                    group-hover:text-indigo-500 dark:group-hover:text-indigo-400 
+                    group-hover:border-indigo-500 dark:group-hover:border-indigo-400`}
                   >
                     <span className="block px-1 pt-1 pb-2">
                       <item.icon className="text-2xl pt-1 mb-1 block mx-auto" />

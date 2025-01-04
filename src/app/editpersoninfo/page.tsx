@@ -232,7 +232,7 @@ const EditProfilePage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 pb-24">
       <LandingPageHeader />
       <BottomNavbar />
-      <div className="min-h-screen bg-gray-50 p-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 p-8">
         <Card className="max-w-2xl mx-auto">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-center">
@@ -368,7 +368,7 @@ const EditProfilePage: React.FC = () => {
                       type="number"
                       value={totalFees}
                       onChange={(e) => setTotalFees(e.target.value)}
-                      className="transition-all duration-300 focus:ring-2 focus:ring-blue-500"
+                      className="transition-all duration-300 focus:ring-2 focus:ring-blue-500 dark:text-white"
                       required
                     />
                   </div>
@@ -380,7 +380,7 @@ const EditProfilePage: React.FC = () => {
                       onChange={(e) =>
                         setPaymentMode(e.target.value as "cash" | "upi")
                       }
-                      className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-700 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                     >
                       <option value="cash">Cash</option>
                       <option value="upi">UPI</option>

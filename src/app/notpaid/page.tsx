@@ -16,7 +16,7 @@ interface StatusBadgeProps {
   status: boolean;
 }
 
-const StatusBadge : React.FC<StatusBadgeProps> = ({ status }) => (
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => (
   <span
     className={`px-3 py-1 rounded-full text-xs font-semibold 
     ${status ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
@@ -185,11 +185,11 @@ const NotPaid = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 pb-24">
       <LandingPageHeader />
       <BottomNavbar />
-      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-        <div className="p-4 bg-gray-50 dark:bg-gray-700">
+      <div className="bg-white dark:bg-black shadow-lg rounded-lg overflow-hidden">
+        <div className="p-4 bg-gray-50 dark:bg-zinc-900">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <SearchIcon className="w-5 h-5 text-gray-400" />
+              <SearchIcon className="w-5 h-5 text-gray-400 dark:text-gray-300" />
             </div>
             <input
               type="search"
@@ -197,18 +197,18 @@ const NotPaid = () => {
               onChange={handleSearch}
               placeholder="Search Members"
               className="w-full pl-10 pr-4 py-2 rounded-lg 
-          border border-gray-300 dark:border-gray-600 
-          bg-white dark:bg-gray-800 
-          text-gray-900 dark:text-white 
-          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
-          transition-colors duration-300"
+            border border-gray-300 dark:border-zinc-700 
+            bg-white dark:bg-black 
+            text-gray-900 dark:text-white 
+            focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+            transition-colors duration-300"
             />
           </div>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-100 dark:bg-gray-700">
+            <thead className="bg-gray-100 dark:bg-zinc-900">
               <tr>
                 {[
                   "Image",
@@ -237,7 +237,7 @@ const NotPaid = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                      className="border-b dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-900 transition-colors"
                     >
                       <td className="px-4 py-4">
                         {row.imageUrl ? (
@@ -247,7 +247,7 @@ const NotPaid = () => {
                             className="w-10 h-10 rounded-full object-cover"
                           />
                         ) : (
-                          <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                          <div className="w-10 h-10 bg-gray-200 dark:bg-zinc-800 rounded-full"></div>
                         )}
                       </td>
                       <td className="px-4 py-4 font-medium text-gray-900 dark:text-white">
@@ -259,6 +259,7 @@ const NotPaid = () => {
                         {row.fullName}
                       </Link>
                       </td>
+
                       <td className="px-4 py-4 text-gray-500 dark:text-gray-300">
                         {new Date(row.doj).toLocaleDateString("en-GB")}
                       </td>
@@ -271,6 +272,7 @@ const NotPaid = () => {
                       <td className="px-4 py-4">
                         <StatusBadge status={row.feesstatus} />
                       </td>
+
                       <td className="px-4 py-4">
                       <Link
                         href={`/editpersoninfo?${new URLSearchParams({
@@ -311,7 +313,7 @@ const NotPaid = () => {
           <Link href="/AddPerson">
             <button
               // onClick={handleRedirect}
-              onClick={()=>setLoading(true)}
+              onClick={() => setLoading(true)}
               className="group relative overflow-hidden 
             rounded-full p-4 bg-blue-600 text-white 
             shadow-xl hover:shadow-2xl transition-all duration-300 
