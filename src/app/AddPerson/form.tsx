@@ -221,7 +221,7 @@ export default function Form() {
       <form onSubmit={handleFormSubmit}>
         <div className="space-y-12">
           <div>
-            <h2 className="text-base/7 font-semibold text-gray-900 border dark:border-none bg-slate-200 dark:bg-black dark:text-white  text-center rounded-lg">
+            <h2 className="text-base/7 font-semibold text-gray-900 border dark:border-none bg-slate-200 dark:bg-zinc-900 dark:text-white  text-center rounded-lg">
               Add Person
             </h2>
 
@@ -362,7 +362,7 @@ export default function Form() {
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 bg-zinc-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -381,7 +381,7 @@ export default function Form() {
                     type="number"
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value)}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 bg-zinc-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -399,7 +399,7 @@ export default function Form() {
                     type="number"
                     value={weight}
                     onChange={(e) => setWeight(e.target.value)}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 bg-zinc-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -446,7 +446,7 @@ export default function Form() {
                     type="date"
                     value={dateOfJoin}
                     onChange={(e) => setDateOfJoin(e.target.value)}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 bg-zinc-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -464,7 +464,7 @@ export default function Form() {
                     type="number"
                     value={totalFees}
                     onChange={(e) => setTotalFees(e.target.value)}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 bg-zinc-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -499,7 +499,7 @@ export default function Form() {
                   onChange={(e) =>
                     setPaymentMode(e.target.value as "cash" | "upi")
                   }
-                  className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900  ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 dark:bg-zinc-900  ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 >
                   <option value="cash">Cash</option>
                   <option value="upi">UPI</option>
