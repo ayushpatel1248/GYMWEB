@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "../../utils/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { SearchIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface StatusBadgeProps {
   status: boolean;
@@ -257,10 +258,10 @@ const Table = () => {
                         <img
                           src={row.imageUrl}
                           alt={row.fullName}
-                          className="w-10 h-10 rounded-full object-cover"
+                          className={cn("w-10 h-10 rounded-full object-cover border-2",row.feesstatus ? "border-green-600" : "border-red-600")}
                         />
                       ) : (
-                        <div className="w-10 h-10 bg-gray-200 dark:bg-zinc-800 rounded-full"></div>
+                        <div className={cn("w-10 h-10 bg-gray-200 dark:bg-zinc-800 rounded-full border-2",row.feesstatus ? "border-green-600" : "border-red-600")}></div>
                       )}
                     </td>
 
