@@ -11,6 +11,10 @@ import { motion } from 'framer-motion';
 const LandingPage = () => {
   const [redirecting, setRedirecting] = useState(false);
 
+  const sendNotification = ()=>{
+    
+  }
+
   const handleRedirect = () => {
     setRedirecting(true);
   };
@@ -25,7 +29,9 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 pb-24">
+      {/* header */}
       <LandingPageHeader />
+      {/* bootom nav bar */}
       <BottomNavbar />
       
       <div className="container mx-auto px-4 py-2">
@@ -35,6 +41,7 @@ const LandingPage = () => {
           transition={{ duration: 0.5 }}
           className="fixed bottom-24 right-8 z-40"
         >
+          {/* add person */}
           <Link href="/AddPerson">
             <button 
               onClick={handleRedirect}
@@ -50,6 +57,8 @@ const LandingPage = () => {
           </Link>
         </motion.div>
 
+
+{/* table  */}
         <Table />
       </div>
     </div>

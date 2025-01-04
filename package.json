@@ -35,7 +35,8 @@
     "rsuite": "^5.74.2",
     "shadcn-ui": "^0.9.3",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@types/node": "^20",
