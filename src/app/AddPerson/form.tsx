@@ -410,20 +410,20 @@ export default function Form() {
                     {membershipPlan} Membership Plan
                     <ChevronDownIcon
                       aria-hidden="true"
-                      className="-mr-1 h-5 w-5 text-gray-400"
+                      className="-mr-1 h-5 w-5 text-gray-400 "
                     />
                   </MenuButton>
                 </div>
 
                 <MenuItems
                   as="div"
-                  className="absolute z-10 mt-2 w-56 rounded-md bg-white dark:bg-black shadow-lg ring-1 ring-black ring-opacity-5"
+                  className="absolute z-10 mt-2 w-56 rounded-md bg-white dark:bg-black  shadow-lg ring-1 ring-black ring-opacity-5"
                 >
                   {["1 Month", "3 Month", "6 Month", "12 Month"].map((plan) => (
                     <MenuItem
                       key={plan}
                       as="button"
-                      className="block px-4 py-2 text-sm text-gray-700"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-white"
                       onClick={() => setMembershipPlan(plan)}
                     >
                       {plan}

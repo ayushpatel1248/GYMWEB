@@ -22,16 +22,16 @@ const generateInvoiceNumber = () => {
 
 export const generateInvoiceHTML = (data: InvoiceData) => {
   const invoiceHTML = `
-  <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
-    <div id="invoice" style="width: 800px; padding: 40px; font-family: Arial, sans-serif; border: 2px solid black;">
+  <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #121212; color: #ffffff;">
+    <div id="invoice" style="width: 800px; padding: 40px; font-family: Arial, sans-serif; border: 2px solid #ffffff; background-color: #1e1e1e;">
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #1a56db; margin: 0;">SR Fitness</h1>
-        <p style="color: #4b5563; margin: 5px 0;">Fitness Center Invoice</p>
+        <h1 style="color: #1a75ff; margin: 0;">SR Fitness</h1>
+        <p style="color: #d1d5db; margin: 5px 0;">Fitness Center Invoice</p>
       </div>
       
-      <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 40px; color: #d1d5db;">
         <div>
-          <h3 style="color: #1f2937; margin-bottom: 10px;">Bill To:</h3>
+          <h3 style="color: #ffffff; margin-bottom: 10px;">Bill To:</h3>
           <p style="margin: 5px 0;">${data.customerName}</p>
           <p style="margin: 5px 0;">Mobile: ${data.mobileNumber}</p>
         </div>
@@ -41,44 +41,45 @@ export const generateInvoiceHTML = (data: InvoiceData) => {
         </div>
       </div>
       
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; color: #d1d5db;">
         <thead>
-          <tr style="background-color: #f3f4f6;">
-            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Description</th>
-            <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb;">Amount</th>
+          <tr style="background-color: #2d2d2d; color: #ffffff;">
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #444;">Description</th>
+            <th style="padding: 12px; text-align: right; border-bottom: 2px solid #444;">Amount</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 12px; border-bottom: 1px solid #444;">
               Gym Membership - ${data.planDuration} Month<br>
-              <small style="color: #6b7280;">Valid from: ${data.validFrom} to ${data.validUntil}</small>
+              <small style="color: #9ca3af;">Valid from: ${data.validFrom} to ${data.validUntil}</small>
             </td>
-            <td style="padding: 12px; text-align: right; border-bottom: 1px solid #e5e7eb;">₹${data.amount}</td>
+            <td style="padding: 12px; text-align: right; border-bottom: 1px solid #444;">₹${data.amount}</td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
-            <td style="padding: 12px; text-align: right; font-weight: bold;">Total:</td>
-            <td style="padding: 12px; text-align: right; font-weight: bold;">₹${data.amount}</td>
+            <td style="padding: 12px; text-align: right; font-weight: bold; color: #ffffff;">Total:</td>
+            <td style="padding: 12px; text-align: right; font-weight: bold; color: #ffffff;">₹${data.amount}</td>
           </tr>
         </tfoot>
       </table>
       
-      <div style="margin-bottom: 30px;">
+      <div style="margin-bottom: 30px; color: #d1d5db;">
         <p style="margin: 5px 0;"><strong>Payment Method:</strong> ${data.paymentMode.toUpperCase()}</p>
       </div>
       
-      <div style="text-align: center; color: #6b7280; font-size: 14px;">
+      <div style="text-align: center; color: #9ca3af; font-size: 14px;">
         <p>Thank you for choosing SR Fitness!</p>
         <p>For any queries, please contact us at your convenience.</p>
       </div>
     </div>
-    </div>
+  </div>
   `;
 
   return invoiceHTML;
 };
+
 
 export const generateAndUploadInvoice = async (
   data: InvoiceData
