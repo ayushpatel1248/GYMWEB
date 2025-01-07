@@ -79,13 +79,24 @@ export const generateInvoiceHTML = (data: InvoiceData) => {
         <p style="margin: 5px 0; color: black; background-color: white;"><strong>Payment Method:</strong> ${data.paymentMode.toUpperCase()}</p>
       </div>
       
-      <div style="text-align: center; color: #6b7280; font-size: 14px; background-color: white;">
+      <div style="text-align: center; color: #6b7280; font-size: 14px; background-color: white; margin-bottom: 20px;">
         <p style="background-color: white;">Thank you for choosing SR Fitness!</p>
         <p style="background-color: white;">For any queries, please contact us at your convenience.</p>
       </div>
+
+      <div style="color: black; font-size: 14px; background-color: white;">
+        <p style="margin: 5px 0; background-color: white;">Note:</p>
+        <ul style="margin-left: 20px; background-color: white;">
+          <li style="background-color: white;">Exercise On Your Risk.</li>
+          <li style="background-color: white;">Fee Not Refund & Adjust Any Condition.</li>
+          <li style="background-color: white;">This fee is only for general Training.</li>
+          <li style="background-color: white;">Separate fees will have to be paid for special Training.</li>
+        </ul>
+      </div>
     </div>
   </div>
-  `;
+`;
+
 
   return invoiceHTML;
 };

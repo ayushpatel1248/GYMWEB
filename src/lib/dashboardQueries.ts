@@ -169,7 +169,7 @@ export async function getDashboardData() {
       (a, b) =>
         new Date(b.paymentDate).getTime() - new Date(a.paymentDate).getTime()
     );
-    recentTransactions = recentTransactions.slice(0, 10);
+    recentTransactions = recentTransactions.slice(0, 5);
 
     return {
       totalEarnings,
