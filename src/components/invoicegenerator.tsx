@@ -30,61 +30,61 @@ export const generateInvoiceHTML = (data: InvoiceData) => {
   }
 
   const invoiceHTML = `
-  <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: white;">
-    <div id="invoice" style="width: 800px; padding: 40px; font-family: Arial, sans-serif; border: 2px solid black; background-color: white; color: black;">
-      <div style="text-align: center; margin-bottom: 30px; background-color: white;">
-        <h1 style="color: #1a56db; margin: 0; background-color: white;">SR Fitness</h1>
-        <p style="color: #4b5563; margin: 5px 0; background-color: white;">Fitness Center Invoice</p>
-      </div>
-      
-      <div style="display: flex; justify-content: space-between; margin-bottom: 40px; background-color: white;">
-        <div style="background-color: white;">
-          <h3 style="color: #1f2937; margin-bottom: 10px; background-color: white;">Bill To:</h3>
-          <div style="color: black; background-color: white;">
-            <p style="margin: 5px 0; color: black; background-color: white; display: block;">${data?.customerName || 'N/A'}</p>
-            <p style="margin: 5px 0; color: black; background-color: white; display: block;">Mobile: ${data?.mobileNumber || 'N/A'}</p>
-          </div>
-        </div>
-        <div style="background-color: white;">
-          <p style="margin: 5px 0; color: black; background-color: white;">Invoice #: ${data.invoiceNumber}</p>
-          <p style="margin: 5px 0; color: black; background-color: white;">Date: ${new Date().toLocaleDateString()}</p>
+ <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: white; padding: 20px;">
+  <div id="invoice" style="width: 100%; max-width: 800px; padding: 20px; font-family: Arial, sans-serif; border: 2px solid black; background-color: white; color: black; box-sizing: border-box;">
+    <div style="text-align: center; margin-bottom: 20px;">
+      <h1 style="color: #1a56db; margin: 0; font-size: 24px;">SR Fitness</h1>
+      <p style="color: #4b5563; margin: 5px 0; font-size: 16px;">Fitness Center Invoice</p>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 30px;">
+      <div style="flex: 1; min-width: 200px; margin-bottom: 20px;">
+        <h3 style="color: #1f2937; margin-bottom: 10px; font-size: 18px;">Bill To:</h3>
+        <div style="color: black;">
+          <p style="margin: 5px 0; color: black; font-size: 14px;">${data?.customerName || 'N/A'}</p>
+          <p style="margin: 5px 0; color: black; font-size: 14px;">Mobile: ${data?.mobileNumber || 'N/A'}</p>
         </div>
       </div>
-      
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; background-color: white;">
-        <thead>
-          <tr style="background-color: #f3f4f6;">
-            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb; color: black;">Description</th>
-            <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb; color: black;">Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="background-color: white;">
-            <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; color: black; background-color: white;">
-              Gym Membership - ${data.planDuration} Month<br>
-              <small style="color: #6b7280; background-color: white;">Valid from: ${data.validFrom} to ${data.validUntil}</small>
-            </td>
-            <td style="padding: 12px; text-align: right; border-bottom: 1px solid #e5e7eb; color: black; background-color: white;">₹${data.amount}</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr style="background-color: white;">
-            <td style="padding: 12px; text-align: right; font-weight: bold; color: black; background-color: white;">Total:</td>
-            <td style="padding: 12px; text-align: right; font-weight: bold; color: black; background-color: white;">₹${data.amount}</td>
-          </tr>
-        </tfoot>
-      </table>
-      
-      <div style="margin-bottom: 30px; background-color: white;">
-        <p style="margin: 5px 0; color: black; background-color: white;"><strong>Payment Method:</strong> ${data.paymentMode.toUpperCase()}</p>
-      </div>
-      
-      <div style="text-align: center; color: #6b7280; font-size: 14px; background-color: white;">
-        <p style="background-color: white;">Thank you for choosing SR Fitness!</p>
-        <p style="background-color: white;">For any queries, please contact us at your convenience.</p>
+      <div style="flex: 1; min-width: 200px; text-align: right;">
+        <p style="margin: 5px 0; color: black; font-size: 14px;">Invoice #: ${data.invoiceNumber}</p>
+        <p style="margin: 5px 0; color: black; font-size: 14px;">Date: ${new Date().toLocaleDateString()}</p>
       </div>
     </div>
+
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+      <thead>
+        <tr style="background-color: #f3f4f6;">
+          <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb; font-size: 14px; color: black;">Description</th>
+          <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb; font-size: 14px; color: black;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: black;">
+            Gym Membership - ${data.planDuration} Month<br>
+            <small style="color: #6b7280; font-size: 12px;">Valid from: ${data.validFrom} to ${data.validUntil}</small>
+          </td>
+          <td style="padding: 12px; text-align: right; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: black;">₹${data.amount}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td style="padding: 12px; text-align: right; font-weight: bold; font-size: 14px; color: black;">Total:</td>
+          <td style="padding: 12px; text-align: right; font-weight: bold; font-size: 14px; color: black;">₹${data.amount}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div style="margin-bottom: 30px;">
+      <p style="margin: 5px 0; color: black; font-size: 14px;"><strong>Payment Method:</strong> ${data.paymentMode.toUpperCase()}</p>
+    </div>
+
+    <div style="text-align: center; color: #6b7280; font-size: 12px;">
+      <p>Thank you for choosing SR Fitness!</p>
+      <p>For any queries, please contact us at your convenience.</p>
+    </div>
   </div>
+</div>
   `;
 
   return invoiceHTML;
