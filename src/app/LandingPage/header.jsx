@@ -37,11 +37,14 @@ const LandingPageHeader = () => {
           className="flex items-center space-x-4"
         >
           {/* <ModeToggle /> */}
-          <button className="relative hover:bg-gray-100 dark:hover:bg-zinc-900 p-2 rounded-full transition-colors">
-            <Bell className="w-6 h-6 text-gray-600 dark:text-white" />
-            <span className="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
-          </button>
-
+          <Link
+          href={"/notification"}
+          >
+            <button className="relative hover:bg-gray-100 dark:hover:bg-zinc-900 p-2 rounded-full transition-colors">
+              <Bell className="w-6 h-6 text-gray-600 dark:text-white" />
+              <span className="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
+            </button>
+          </Link>
           <Link
             href="/dashboard"
             className="hover:bg-gray-100 dark:hover:bg-zinc-900 p-2 rounded-full transition-colors"
