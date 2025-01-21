@@ -3,12 +3,8 @@ import React, { useEffect, useState } from "react";
 import {
   Calendar,
   Phone,
-  Mail,
-  Weight,
   Clock,
   Trophy,
-  MapPin,
-  User2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -22,17 +18,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import profileimg from "./profileimg.jpg";
-import { StaticImageData } from "next/image";
-import { AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createClient } from "../../utils/supabase/client";
 import { Trash2, Loader } from "lucide-react";
-import FloatingNavDemo from "../LandingPage/navbar";
-import WordPullUp from "@/components/ui/word-pull-up";
 import BottomNavbar from "../LandingPage/bottom-navbar";
 import LandingPageHeader from "../LandingPage/header";
 import TransactionHistory from "./Transactionhistory";
+import { WeightProgress } from "./WeightProgress";
 
 // Types and Interfaces
 type Gender = "male" | "female" | "other";
@@ -153,13 +145,10 @@ const aboutPerson: React.FC = () => {
 
   // Contact items array with proper typing
   const contactItems: ContactItem[] = [
-    // { icon: <User2 className="w-4 h-4" />, value: param.get("gender") },
     {
       icon: <Phone className="w-4 h-4" />,
       value: param?.get("mobileNumber") ?? "",
     },
-    // { icon: <Mail className="w-4 h-4" />, value: user.email },
-    // { icon: <MapPin className="w-4 h-4" />, value: user.address }
   ];
   const [loading, setLoading] = useState(false); // Loading state
 
@@ -194,11 +183,7 @@ const aboutPerson: React.FC = () => {
   }, []);
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 transition-colors duration-300 pb-24">
-      {/* <FloatingNavDemo />
-      <WordPullUp
-        className="text-4xl font-bold tracking-[-0.02em] text-blue-700 dark:text-white md:text-7xl md:leading-[5rem]"
-        words="SR Fitness"
-      /> */}
+     
       <LandingPageHeader />
       <BottomNavbar />
       <div className="max-w-4xl mx-auto p-6 space-y-6 mt-5">
@@ -288,47 +273,15 @@ const aboutPerson: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* Rest of the component remains the same... */}
-            {/* Weight Tracking */}
             <Card className="transform transition-all duration-300 hover:shadow-xl hover:shadow-purple-100">
-              {/* ... Weight tracking content ... */}
               <CardHeader>
                 <CardTitle className="text-gradient">Weight Progress</CardTitle>
               </CardHeader>
-              <CardContent>
-                {/* <div className="flex items-center justify-center mb-4 p-4 rounded-lg bg-gradient-to-r from-purple-50 to-blue-50">
-                  <div className="text-center transform transition-all duration-300 hover:scale-105">
-                    <div className="text-sm text-purple-600">Current</div>
-                    <div className="text-xl font-bold flex items-center gap-2 text-purple-700">
-                      <Weight className="w-4 h-4" />
-                      {JSON.parse(param?.get('wp') ?? '{}') ?? 'No weight'} kg
-                      {JSON.parse(param?.get('wp') ?? '{}') ?? ''}
-                    </div>
-                  </div>
-                </div> */}
-                <div className="space-y-2">
-                  {JSON.parse(param?.get("wp") ?? "[]")?.map(
-                    (record: { date: string; weight: number }) => (
-                      <div
-                        key={record.date}
-                        className="flex justify-between items-center p-2 rounded-lg transition-all duration-300 hover:bg-gray-50"
-                      >
-                        <span className="text-sm text-purple-600">
-                          {record.date}
-                        </span>
-                        <span className="font-medium text-blue-600">
-                          {record.weight} kg
-                        </span>
-                      </div>
-                    )
-                  )}
-                </div>
-              </CardContent>
+                <WeightProgress weightProgress={JSON.parse(param?.get("wp") ?? "[]") }></WeightProgress>
             </Card>
           </div>
         </div>
 
-        {/* Payment History and Join Date sections remain the same... */}
         <Card className="transform transition-all duration-300 hover:shadow-xl hover:shadow-purple-100">
           <CardHeader>
             <CardTitle className="text-gradient">Remaining Days</CardTitle>
@@ -343,7 +296,6 @@ const aboutPerson: React.FC = () => {
                     ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-green-100"
                     : "bg-gradient-to-r from-red-50 to-red-50 border-red-200 hover:shadow-red-100"
                 }  `}
-                // bg-gradient-to-r from-red-50 to-rose-50 border-red-200 hover:shadow-red-100
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -363,7 +315,6 @@ const aboutPerson: React.FC = () => {
                           : "text-red-800"
                       }`}
                     >
-                      {/* text-rose-600 */}
                       days remain
                     </div>
                   </div>

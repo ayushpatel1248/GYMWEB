@@ -143,22 +143,32 @@ const EditProfilePage: React.FC = () => {
         mobileNumber: formData.mobileNumber,
         wp:
           formData.wp.length < 7
-            ? [
+            ? // Check if weightProgress is the same as the last weight, only update if different
+              [
                 ...formData.wp,
-                {
-                  weight: weightProgress,
-                  date: new Date().toLocaleDateString("en-CA"),
-                },
+                ...(formData.wp.length === 0 || formData.wp[formData.wp.length - 1].weight !== weightProgress
+                  ? [
+                      {
+                        weight: weightProgress,
+                        date: new Date().toLocaleDateString("en-CA"),
+                      },
+                    ]
+                  : []),
               ]
             : [
                 ...formData.wp.slice(1),
-                {
-                  weight: weightProgress,
-                  date: new Date().toLocaleDateString("en-CA"),
-                },
+                ...(formData.wp[formData.wp.length - 1].weight !== weightProgress
+                  ? [
+                      {
+                        weight: weightProgress,
+                        date: new Date().toLocaleDateString("en-CA"),
+                      },
+                    ]
+                  : []),
               ],
         plan: `${formData.membershipPlan} Month`,
       };
+      
 
       // Add new transaction if plan is increased
       if (newTransaction) {
@@ -241,7 +251,6 @@ const EditProfilePage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Existing fields remain the same */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium">Full Name</label>
