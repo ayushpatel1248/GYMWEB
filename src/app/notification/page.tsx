@@ -7,10 +7,7 @@ const Page = () => {
   const [notificationStatus, setNotificationStatus] = useState<string | null>(null);
   const supabase = createClient();
   const [ dbdata, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [filteredData, setFilteredData] = useState<any[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [redirecting, setRedirecting] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
 
   const parsePlanMonths = (planString: string): number => {
@@ -93,105 +90,106 @@ const Page = () => {
   }, []);
 
 
-  const urlBase64ToUint8Array = (base64String: string) => {
-    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding)
-      .replace(/-/g, "+")
-      .replace(/_/g, "/");
-    const rawData = window.atob(base64);
-    return new Uint8Array([...rawData].map((char) => char.charCodeAt(0)));
-  };
+  // const urlBase64ToUint8Array = (base64String: string) => {
+  //   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  //   const base64 = (base64String + padding)
+  //     .replace(/-/g, "+")
+  //     .replace(/_/g, "/");
+  //   const rawData = window.atob(base64);
+  //   return new Uint8Array([...rawData].map((char) => char.charCodeAt(0)));
+  // };
 
-  const generateSubscribeEndPoint = async (registration: ServiceWorkerRegistration) => {
-    const publicKey =
-      "BDf-3G51UdegX8K9R5q_TPmyJSYRBiN3wczOAmDXkzX_I-zXM9Kymt5UEbVKWO1884lutCcNljUSXovmBvt-iIg";
-    const options = {
-      applicationServerKey: urlBase64ToUint8Array(publicKey),
-      userVisibleOnly: true,
-    };
-    try {
-      const subscription = await registration.pushManager.subscribe(options);
+  // const generateSubscribeEndPoint = async (registration: ServiceWorkerRegistration) => {
+  //   const publicKey =
+  //     "BDf-3G51UdegX8K9R5q_TPmyJSYRBiN3wczOAmDXkzX_I-zXM9Kymt5UEbVKWO1884lutCcNljUSXovmBvt-iIg";
+  //   const options = {
+  //     applicationServerKey: urlBase64ToUint8Array(publicKey),
+  //     userVisibleOnly: true,
+  //   };
+  //   try {
+  //     const subscription = await registration.pushManager.subscribe(options);
       
-      const { error } = await supabase
-        .from("notification")
-        .insert({ notification_json: JSON.stringify(subscription) });
-      if (error) {
-        console.error("Error inserting subscription:", error.message);
-      } else {
-        console.log("User subscribed successfully!");
-      }
-    } catch (err: any) {
-      console.error("Failed to subscribe:", err.message);
-    }
-  };
+  //     const { error } = await supabase
+  //       .from("notification")
+  //       .insert({ notification_json: JSON.stringify(subscription) });
+  //     if (error) {
+  //       console.error("Error inserting subscription:", error.message);
+  //     } else {
+  //       console.log("User subscribed successfully!");
+  //     }
+  //   } catch (err: any) {
+  //     console.error("Failed to subscribe:", err.message);
+  //   }
+  // };
 
-  const subscribeUser = async () => {
-    if ("serviceWorker" in navigator) {
-      try {
-        let registration = await navigator.serviceWorker.getRegistration();
+  // const subscribeUser = async () => {
+  //   if ("serviceWorker" in navigator) {
+  //     try {
+  //       let registration = await navigator.serviceWorker.getRegistration();
 
-        // Register service worker if not already registered
-        if (!registration) {
-          registration = await navigator.serviceWorker.register("/sw.js");
-        } else if (registration.waiting) {
-          // Handle waiting service worker
-          registration.waiting.postMessage({ type: "SKIP_WAITING" });
-        }
+  //       // Register service worker if not already registered
+  //       if (!registration) {
+  //         registration = await navigator.serviceWorker.register("/sw.js");
+  //       } else if (registration.waiting) {
+  //         // Handle waiting service worker
+  //         registration.waiting.postMessage({ type: "SKIP_WAITING" });
+  //       }
 
-        // Check if already subscribed to push notifications
-        const isSubscribed = await registration.pushManager.getSubscription();
-        if (isSubscribed) {
-          console.log("Already subscribed to push notifications.");
-          return;
-        }
+  //       // Check if already subscribed to push notifications
+  //       const isSubscribed = await registration.pushManager.getSubscription();
+  //       if (isSubscribed) {
+  //         console.log("Already subscribed to push notifications.");
+  //         return;
+  //       }
 
-        // Wait for service worker to activate if it's installing or waiting
-        if (registration.installing || registration.waiting) {
-          await new Promise<void>((resolve) => {
-            const stateChangeListener = () => {
-              if (registration.active) {
-                resolve();
-              }
-            };
+  //       // Wait for service worker to activate if it's installing or waiting
+  //       if (registration.installing || registration.waiting) {
+  //         await new Promise<void>((resolve) => {
+  //           const stateChangeListener = () => {
+  //             if (registration.active) {
+  //               resolve();
+  //             }
+  //           };
 
-            if (registration.installing) {
-              registration.installing.addEventListener("statechange", stateChangeListener);
-            } else if (registration.waiting) {
-              registration.waiting.addEventListener("statechange", stateChangeListener);
-            }
-          });
-        }
+  //           if (registration.installing) {
+  //             registration.installing.addEventListener("statechange", stateChangeListener);
+  //           } else if (registration.waiting) {
+  //             registration.waiting.addEventListener("statechange", stateChangeListener);
+  //           }
+  //         });
+  //       }
 
-        // Proceed with subscription
-        await generateSubscribeEndPoint(registration);
-      } catch (error) {
-        console.error("Error in service worker registration or subscription:", error);
-      }
-    } else {
-      console.error("Service workers are not supported in this browser.");
-    }
-  };
+  //       // Proceed with subscription
+  //       await generateSubscribeEndPoint(registration);
+  //     } catch (error) {
+  //       console.error("Error in service worker registration or subscription:", error);
+  //     }
+  //   } else {
+  //     console.error("Service workers are not supported in this browser.");
+  //   }
+  // };
 
-  const showNotification = async () => {
-    if ("Notification" in window) {
-      try {
-        const permission = await Notification.requestPermission();
-        setNotificationStatus(permission);
+  // const showNotification = async () => {
+  //   if ("Notification" in window) {
+  //     try {
+  //       const permission = await Notification.requestPermission();
+  //       setNotificationStatus(permission);
 
-        if (permission === "granted") {
-          subscribeUser();
-        } else {
-          alert("Please enable notifications in your browser settings.");
-        }
-      } catch (error) {
-        console.error("Error requesting notification permission:", error);
-      }
-    } else {
-      console.log("Your browser does not support notifications.");
-    }
-  };
+  //       if (permission === "granted") {
+  //         subscribeUser();
+  //       } else {
+  //         alert("Please enable notifications in your browser settings.");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error requesting notification permission:", error);
+  //     }
+  //   } else {
+  //     console.log("Your browser does not support notifications.");
+  //   }
+  // };
 
   const handleSendNotification = async () => {
+    setLoading(true)
     try {
       // Check if service workers are supported
       if (!("serviceWorker" in navigator)) {
@@ -221,25 +219,33 @@ const Page = () => {
     } catch (error) {
       console.error("Error in sending notification:", error);
     }
+    finally{
+      setLoading(false)
+    }
   };
   
 
-  return (
+  return ( 
+    loading? <div className="h-[60vh] flex justify-center items-center">
+    <div className="animate-spin w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+  </div>:
     <>
-      <div onClick={showNotification} style={{ cursor: "pointer", padding: "10px", border: "1px solid #000" }}>
+      {/* <div onClick={showNotification} style={{ cursor: "pointer", padding: "10px", border: "1px solid #000" }}>
         Subscribe for Notifications
-      </div>
+      </div> */}
+
+
       <div className="pt-6">
         <button onClick={handleSendNotification}>
           Send Notification
         </button>
       </div>
 
-      {notificationStatus && (
+      {/* {notificationStatus && (
         <div>
           Notification Permission: {notificationStatus}
         </div>
-      )}
+      )} */}
     </>
   );
 };
