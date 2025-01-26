@@ -25,7 +25,7 @@ const LandingPage = () => {
     return new Uint8Array([...rawData].map((char) => char.charCodeAt(0)));
   };
 
-  
+
   const generateSubscribeEndPoint = async (registration: ServiceWorkerRegistration) => {
     const publicKey =
       "BDf-3G51UdegX8K9R5q_TPmyJSYRBiN3wczOAmDXkzX_I-zXM9Kymt5UEbVKWO1884lutCcNljUSXovmBvt-iIg";
@@ -106,6 +106,7 @@ const LandingPage = () => {
     if ("Notification" in window) {
       try {
         const permission = await Notification.requestPermission();
+        console.log("permission", permission)
         setNotificationStatus(permission);
 
         if (permission === "granted") {
@@ -122,7 +123,9 @@ const LandingPage = () => {
   };
 
   useEffect(()=>{
+    console.log("shownotification")
     showNotification()
+    console.log("show end")
   },[])
 
   const handleRedirect = () => {
