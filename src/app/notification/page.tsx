@@ -2,14 +2,17 @@
 import React, { useEffect, useState } from "react";
 import { createClient } from "../../utils/supabase/client";
 import { sendNotification } from "./sendNotification";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Page = () => {
   const [notificationStatus, setNotificationStatus] = useState<string | null>(null);
+  const [permit , setPermit] = useState("")
   const supabase = createClient();
   const [ dbdata, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [notificationEnabled, setNotificationEnabled] = useState<boolean>(false)
 // grand permission 
+
 const urlBase64ToUint8Array = (base64String: string) => {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding)
@@ -95,6 +98,7 @@ const showNotification = async () => {
       const permission = await Notification.requestPermission();
       console.log("permission", permission)
       setNotificationStatus(permission);
+      setPermit(permission)
 
       if (permission === "granted") {
         subscribeUser();
@@ -109,7 +113,6 @@ const showNotification = async () => {
   }
 };
 // grant premission ends 
-
 
 
   const parsePlanMonths = (planString: string): number => {
@@ -152,9 +155,13 @@ const showNotification = async () => {
       endDate: membershipEndDate.toLocaleDateString(),
     };
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const permi = Notification.permission;
+        setPermit(permi);
+        console.log("permi", permi)
         const { data: rows, error } = await supabase
           .from("personList")
           .select("*");
@@ -192,103 +199,6 @@ const showNotification = async () => {
   }, []);
 
 
-  // const urlBase64ToUint8Array = (base64String: string) => {
-  //   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  //   const base64 = (base64String + padding)
-  //     .replace(/-/g, "+")
-  //     .replace(/_/g, "/");
-  //   const rawData = window.atob(base64);
-  //   return new Uint8Array([...rawData].map((char) => char.charCodeAt(0)));
-  // };
-
-  // const generateSubscribeEndPoint = async (registration: ServiceWorkerRegistration) => {
-  //   const publicKey =
-  //     "BDf-3G51UdegX8K9R5q_TPmyJSYRBiN3wczOAmDXkzX_I-zXM9Kymt5UEbVKWO1884lutCcNljUSXovmBvt-iIg";
-  //   const options = {
-  //     applicationServerKey: urlBase64ToUint8Array(publicKey),
-  //     userVisibleOnly: true,
-  //   };
-  //   try {
-  //     const subscription = await registration.pushManager.subscribe(options);
-      
-  //     const { error } = await supabase
-  //       .from("notification")
-  //       .insert({ notification_json: JSON.stringify(subscription) });
-  //     if (error) {
-  //       console.error("Error inserting subscription:", error.message);
-  //     } else {
-  //       console.log("User subscribed successfully!");
-  //     }
-  //   } catch (err: any) {
-  //     console.error("Failed to subscribe:", err.message);
-  //   }
-  // };
-
-  // const subscribeUser = async () => {
-  //   if ("serviceWorker" in navigator) {
-  //     try {
-  //       let registration = await navigator.serviceWorker.getRegistration();
-
-  //       // Register service worker if not already registered
-  //       if (!registration) {
-  //         registration = await navigator.serviceWorker.register("/sw.js");
-  //       } else if (registration.waiting) {
-  //         // Handle waiting service worker
-  //         registration.waiting.postMessage({ type: "SKIP_WAITING" });
-  //       }
-
-  //       // Check if already subscribed to push notifications
-  //       const isSubscribed = await registration.pushManager.getSubscription();
-  //       if (isSubscribed) {
-  //         console.log("Already subscribed to push notifications.");
-  //         return;
-  //       }
-
-  //       // Wait for service worker to activate if it's installing or waiting
-  //       if (registration.installing || registration.waiting) {
-  //         await new Promise<void>((resolve) => {
-  //           const stateChangeListener = () => {
-  //             if (registration.active) {
-  //               resolve();
-  //             }
-  //           };
-
-  //           if (registration.installing) {
-  //             registration.installing.addEventListener("statechange", stateChangeListener);
-  //           } else if (registration.waiting) {
-  //             registration.waiting.addEventListener("statechange", stateChangeListener);
-  //           }
-  //         });
-  //       }
-
-  //       // Proceed with subscription
-  //       await generateSubscribeEndPoint(registration);
-  //     } catch (error) {
-  //       console.error("Error in service worker registration or subscription:", error);
-  //     }
-  //   } else {
-  //     console.error("Service workers are not supported in this browser.");
-  //   }
-  // };
-
-  // const showNotification = async () => {
-  //   if ("Notification" in window) {
-  //     try {
-  //       const permission = await Notification.requestPermission();
-  //       setNotificationStatus(permission);
-
-  //       if (permission === "granted") {
-  //         subscribeUser();
-  //       } else {
-  //         alert("Please enable notifications in your browser settings.");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error requesting notification permission:", error);
-  //     }
-  //   } else {
-  //     console.log("Your browser does not support notifications.");
-  //   }
-  // };
 
   const handleSendNotification = async () => {
     setLoading(true)
@@ -327,28 +237,84 @@ const showNotification = async () => {
   };
   
 
-  return ( 
-    loading? <div className="h-[60vh] flex justify-center items-center">
-    <div className="animate-spin w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-  </div>:
-    <>
-      <div onClick={showNotification} style={{ cursor: "pointer", padding: "10px", border: "1px solid #000" }}>
-        Subscribe for Notifications
-      </div>
 
+  const handleNotificationEnable = () => {
+    showNotification();
+  };
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-black transition-colors duration-300 pb-24">
+      <div className="container mx-auto px-4 py-2">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Notifications</h2>
+            <div>
+              {permit == "granted" ? (
+                <button
+                  onClick={()=>{
+                    alert(
+                      "To disable notifications, please go to your browser's settings and revoke notification permissions for this website."
+                    );
+                  }}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                >
+                  Disable Notifications
+                </button>
+              ) : (
+                <button
+                   onClick={handleNotificationEnable}
+                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+                >
+                  Enable Notifications
+                </button>
+              )}
+            </div>
+          </div>
 
-      <div className="pt-6">
-        <button onClick={handleSendNotification}>
-          Send Notification
-        </button>
-      </div>
-
-      {notificationStatus && (
-        <div>
-          Notification Permission: {notificationStatus}
+          {permit == "granted" && (
+            <AnimatePresence>
+              {dbdata.filter((user) => user.remainingDays === 0).length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-4"
+                >
+                  <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+                    Users with Subscription Ending Soon
+                  </h3>
+                  <ul className="space-y-2">
+                    {dbdata
+                      .filter((user) => user.remainingDays === 0)
+                      .map((user) => (
+                        <li
+                          key={user.id}
+                          className="flex justify-between items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-4"
+                        >
+                          <div>
+                            <h4 className="text-lg font-medium text-gray-800 dark:text-white">
+                              {user.fullName}
+                            </h4>
+                            <p className="text-gray-600 dark:text-gray-400">
+                              Subscription ends on {user.membershipEndDate}
+                            </p>
+                          </div>
+                         
+                        </li>
+                      ))}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          )}
         </div>
-      )}
-    </>
+        <button
+        onClick={()=>{
+          handleSendNotification()
+        }}
+        >send notification</button>
+      </div>
+    </div>
   );
 };
 
