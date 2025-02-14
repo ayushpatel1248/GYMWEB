@@ -156,6 +156,10 @@ const showNotification = async () => {
     };
   };
 
+  const handleNotificationEnable = () => {
+    console.log("handleNotificationEnable runs")
+    showNotification();
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -196,6 +200,8 @@ const showNotification = async () => {
       }
     };
     fetchData();
+    console.log("after fetch data")
+    handleNotificationEnable()
   }, []);
 
 
@@ -238,9 +244,7 @@ const showNotification = async () => {
   
 
 
-  const handleNotificationEnable = () => {
-    showNotification();
-  };
+  
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-black transition-colors duration-300 pb-24">
       <div className="container mx-auto px-4 py-2">
