@@ -36,6 +36,7 @@ interface FormData {
     amount: number;
     invoiceUrl: string;
   }[];
+  serialNumber:number;
 }
 
 // Interface for edit states
@@ -44,6 +45,7 @@ interface EditStates {
   mobileNumber: boolean;
   wp: boolean;
   membershipPlan: boolean;
+  serialNumber:boolean;
 }
 
 // Type for form field keys
@@ -63,6 +65,7 @@ const EditProfilePage: React.FC = () => {
     membershipPlan: 0,
     wp: [],
     transaction: [],
+    serialNumber:0
   });
 
   const [editStates, setEditStates] = useState<EditStates>({
@@ -70,6 +73,7 @@ const EditProfilePage: React.FC = () => {
     mobileNumber: false,
     wp: false,
     membershipPlan: true,
+    serialNumber:false
   });
   
   type FormField = keyof EditStates;
@@ -139,6 +143,7 @@ const EditProfilePage: React.FC = () => {
 
       // Prepare update object
       const updateData: any = {
+        serialNumber: formData.serialNumber,
         fullName: formData.fullName,
         mobileNumber: formData.mobileNumber,
         wp:
@@ -167,6 +172,7 @@ const EditProfilePage: React.FC = () => {
                   : []),
               ],
         plan: `${formData.membershipPlan} Month`,
+
       };
       
 
@@ -224,6 +230,7 @@ const EditProfilePage: React.FC = () => {
       wp: JSON.parse(param.get("wp") ?? "[]"),
       membershipPlan: Number(param.get("plan")?.split(" ")[0]) ?? 0,
       transaction: JSON.parse(param.get("transaction") ?? "[]"),
+      serialNumber:param.get("serialNumber")=="null"?0:Number(param.get("serialNumber"))
     }));
     let parsingData = JSON.parse(param.get("wp") ?? "[]");
     if (parsingData.length == 0) {
@@ -251,6 +258,29 @@ const EditProfilePage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
+
+              {/* serial number */}
+            <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-medium">Serial Number</label>
+                  <div className="flex items-center gap-2">
+                    <Edit className="w-4 h-4 text-gray-500" />
+                    <Switch
+                      checked={editStates.serialNumber}
+                      onCheckedChange={() => handleToggle("serialNumber")}
+                    />
+                  </div>
+                </div>
+                <Input
+                  type="number"
+                  value={formData.serialNumber ?? 0}
+                  onChange={(e) => handleInputChange(e, "serialNumber")}
+                  disabled={!editStates.serialNumber}
+                  className="transition-all duration-300 focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Full name feild */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium">Full Name</label>

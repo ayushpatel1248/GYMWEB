@@ -81,11 +81,13 @@ export default function Form() {
   const supabase = createClient();
 
   // State variables for form inputs
+  
   const [fullName, setFullName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [membershipPlan, setMembershipPlan] = useState("");
   const [dateOfJoin, setDateOfJoin] = useState("");
   const [totalFees, setTotalFees] = useState("");
+  const [serialNumber , setSerialNumber] = useState("");
   const [feesPaid, setFeesPaid] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -180,6 +182,7 @@ export default function Form() {
 
       const { data, error } = await supabase.from("personList").insert([
         {
+          serialNumber: Number(serialNumber),
           fullName,
           mobileNumber,
           plan: !feesPaid ? "0 Month" : membershipPlan,
@@ -207,6 +210,7 @@ export default function Form() {
         setImageFile(null);
         setWeight("");
         setPaymentMode("cash");
+        setSerialNumber("");
       }
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -468,6 +472,26 @@ export default function Form() {
                   />
                 </div>
               </div>
+              {/* serial number  */}
+              <div className="sm:col-span-4">
+                <label
+                  htmlFor="number"
+                  className="block text-sm/6 font-medium text-gray-900 dark:text-white"
+                >
+                  Serial Number
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="serialNumber"
+                    name="sserailNumber"
+                    type="number"
+                    value={serialNumber}
+                    onChange={(e) => setSerialNumber(e.target.value)}
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 dark:bg-zinc-900 dark:text-white"
+                  />
+                </div>
+              </div>
+              {/* serial number end */}
               <div className="sm:col-span-4">
                 <label
                   htmlFor="fees-paid"

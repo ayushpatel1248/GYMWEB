@@ -225,6 +225,7 @@ const Table = () => {
           <thead className="bg-gray-100 dark:bg-zinc-900">
             <tr>
               {[
+                "Sr No.",
                 "Image",
                 "Name",
                 "Date of Join",
@@ -235,7 +236,7 @@ const Table = () => {
               ].map((header) => (
                 <th
                   key={header}
-                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                  className={`${header=="Sr No."?"":"text-left px-4"} py-3  text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider`}
                 >
                   {header}
                 </th>
@@ -253,15 +254,30 @@ const Table = () => {
                     transition={{ delay: index * 0.05 }}
                     className="border-b dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-900 transition-colors"
                   >
+                    <td className="px-2 py-4 text-center text-gray-500 dark:text-gray-300">
+                      {row.serialNumber?row.serialNumber:"00"}
+                    </td>
                     <td className="px-4 py-4">
                       {row.imageUrl ? (
                         <img
                           src={row.imageUrl}
                           alt={row.fullName}
-                          className={cn("w-10 h-10 rounded-full object-cover border-2",row.feesstatus ? "border-green-600" : "border-red-600")}
+                          className={cn(
+                            "w-10 h-10 rounded-full object-cover border-2",
+                            row.feesstatus
+                              ? "border-green-600"
+                              : "border-red-600"
+                          )}
                         />
                       ) : (
-                        <div className={cn("w-10 h-10 bg-gray-200 dark:bg-zinc-800 rounded-full border-2",row.feesstatus ? "border-green-600" : "border-red-600")}></div>
+                        <div
+                          className={cn(
+                            "w-10 h-10 bg-gray-200 dark:bg-zinc-800 rounded-full border-2",
+                            row.feesstatus
+                              ? "border-green-600"
+                              : "border-red-600"
+                          )}
+                        ></div>
                       )}
                     </td>
 
