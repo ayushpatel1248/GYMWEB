@@ -217,6 +217,7 @@ const NotPaid = () => {
                   "Image",
                   "Name",
                   "Date of Join",
+                  "Overdue",
                   "Fees",
                   "Plan",
                   "Status",
@@ -234,66 +235,74 @@ const NotPaid = () => {
             <tbody>
               <AnimatePresence>
                 {filteredData.length > 0 ? (
-                  filteredData.map((row, index) => (
-                    <motion.tr
-                      key={row.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="border-b dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-900 transition-colors"
-                    >
-                      <td className="px-4 py-4">
-                        {row.imageUrl ? (
-                          <img
-                            src={row.imageUrl}
-                            alt={row.fullName}
-                            className="w-10 h-10 rounded-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-10 h-10 bg-gray-200 dark:bg-zinc-800 rounded-full"></div>
-                        )}
-                      </td>
-                      <td className="px-4 py-4 font-medium text-gray-900 dark:text-white">
-                      <Link href={`/aboutPerson?${new URLSearchParams({
-                        ...row,
-                        wp: JSON.stringify(row.wp), // Serialize wp
-                        transaction: JSON.stringify(row.transaction)
-                      }).toString()}`}>
-                        {row.fullName}
-                      </Link>
-                      </td>
-
-                      <td className="px-4 py-4 text-gray-500 dark:text-gray-300">
-                        {new Date(row.doj).toLocaleDateString("en-GB")}
-                      </td>
-                      <td className="px-4 py-4 font-semibold text-gray-700 dark:text-gray-200">
-                        {row.totalfees}
-                      </td>
-                      <td className="px-4 py-4 text-gray-500 dark:text-gray-300">
-                        {row.plan}
-                      </td>
-                      <td className="px-4 py-4">
-                        <StatusBadge status={row.feesstatus} />
-                      </td>
-
-                      <td className="px-4 py-4">
-                      <Link
-                        href={`/editpersoninfo?${new URLSearchParams({
+                  filteredData.map((row, index) => {
+                    const daysOverdue = Math.abs(row.remainingDays);
+                    return (
+                      <motion.tr
+                        key={row.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="border-b dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-900 transition-colors"
+                      >
+                        <td className="px-4 py-4">
+                          {row.imageUrl ? (
+                            <img
+                              src={row.imageUrl}
+                              alt={row.fullName}
+                              className="w-10 h-10 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 bg-gray-200 dark:bg-zinc-800 rounded-full"></div>
+                          )}
+                        </td>
+                        <td className="px-4 py-4 font-medium text-gray-900 dark:text-white">
+                        <Link href={`/aboutPerson?${new URLSearchParams({
                           ...row,
                           wp: JSON.stringify(row.wp), // Serialize wp
                           transaction: JSON.stringify(row.transaction)
-                        }).toString()}`}
-                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors"
-                      >
-                        Edit
-                      </Link>
-                      </td>
-                    </motion.tr>
-                  ))
+                        }).toString()}`}>
+                          {row.fullName}
+                        </Link>
+                        </td>
+
+                        <td className="px-4 py-4 text-gray-500 dark:text-gray-300">
+                          {new Date(row.doj).toLocaleDateString("en-GB")}
+                        </td>
+
+                        <td className="px-4 py-4 text-red-600 dark:text-red-400 font-semibold text-sm">
+                          {daysOverdue} days overdue
+                        </td>
+
+                        <td className="px-4 py-4 font-semibold text-gray-700 dark:text-gray-200">
+                          {row.totalfees}
+                        </td>
+                        <td className="px-4 py-4 text-gray-500 dark:text-gray-300">
+                          {row.plan}
+                        </td>
+                        <td className="px-4 py-4">
+                          <StatusBadge status={row.feesstatus} />
+                        </td>
+
+                        <td className="px-4 py-4">
+                        <Link
+                          href={`/editpersoninfo?${new URLSearchParams({
+                            ...row,
+                            wp: JSON.stringify(row.wp), // Serialize wp
+                            transaction: JSON.stringify(row.transaction)
+                          }).toString()}`}
+                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors"
+                        >
+                          Edit
+                        </Link>
+                        </td>
+                      </motion.tr>
+                    );
+                  })
                 ) : (
                   <tr>
                     <td
-                      colSpan={7}
+                      colSpan={8}
                       className="text-center py-8 text-gray-500 dark:text-gray-400"
                     >
                       No members found
