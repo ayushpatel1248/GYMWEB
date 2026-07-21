@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Home, Users, UserX, LogOut } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 const BottomNavbar = () => {
   const pathname = usePathname();
@@ -30,7 +31,6 @@ const BottomNavbar = () => {
         return;
       }
       
-      // Clear user state and redirect to login
       setUser(null);
       router.push('/login');
     } catch (err) {
@@ -66,45 +66,57 @@ const BottomNavbar = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 w-full z-50">
-      <div className="w-full max-w-md mx-auto">
-        <div className="px-7 bg-white dark:bg-black shadow-lg rounded-t-2xl">
-          <div className="flex">
-            {navItems.map((item) => (
-              <div key={item.link} className="flex-1 group">
-                {item.onClick ? (
-                  <button
-                    onClick={item.onClick}
-                    className={`w-full flex items-end justify-center text-center mx-auto px-4 pt-2 
-                    text-gray-400 dark:text-gray-300 hover:text-indigo-500 dark:hover:text-indigo-400 focus:outline-none`}
-                  >
-                    <span className="block px-1 pt-1 pb-2">
-                      <item.icon className="text-2xl pt-1 mb-1 block mx-auto" />
-                      <span className="block text-xs pb-1">{item.name}</span>
-                    </span>
-                  </button>
-                ) : (
-                  <Link
-                    href={item.link}
-                    className={`flex items-end justify-center text-center mx-auto px-4 pt-2 w-full
-                    ${
-                      pathname === item.link
-                        ? "text-indigo-500 dark:text-indigo-400 border-b-2 border-indigo-500 dark:border-indigo-400"
-                        : "text-gray-400 dark:text-gray-300 border-b-2 border-transparent"
-                    }
-                    group-hover:text-indigo-500 dark:group-hover:text-indigo-400 
-                    group-hover:border-indigo-500 dark:group-hover:border-indigo-400`}
-                  >
-                    <span className="block px-1 pt-1 pb-2">
-                      <item.icon className="text-2xl pt-1 mb-1 block mx-auto" />
-                      <span className="block text-xs pb-1">{item.name}</span>
-                    </span>
-                  </Link>
+    <div className="fixed bottom-4 inset-x-0 mx-auto w-[94%] max-w-sm z-50">
+      <div className="bg-white/85 dark:bg-zinc-950/85 backdrop-blur-xl border border-gray-200/80 dark:border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-full p-1.5 transition-all duration-300">
+        <nav className="flex items-center justify-between relative">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.link;
+
+            if (item.onClick) {
+              return (
+                <button
+                  key={item.name}
+                  onClick={item.onClick}
+                  className="flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-200 focus:outline-none"
+                >
+                  <Icon className="w-5 h-5 mb-0.5" />
+                  <span className="text-[10px] font-medium tracking-tight whitespace-nowrap">
+                    {item.name}
+                  </span>
+                </button>
+              );
+            }
+
+            return (
+              <Link
+                key={item.link}
+                href={item.link}
+                className="flex-1 relative flex flex-col items-center justify-center py-2 px-1 rounded-full transition-colors duration-200"
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTabPill"
+                    className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-blue-600 rounded-full shadow-md shadow-indigo-500/30"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
                 )}
-              </div>
-            ))}
-          </div>
-        </div>
+                <span
+                  className={`relative z-10 flex flex-col items-center justify-center ${
+                    isActive
+                      ? "text-white font-semibold"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                  }`}
+                >
+                  <Icon className="w-5 h-5 mb-0.5" />
+                  <span className="text-[10px] tracking-tight whitespace-nowrap">
+                    {item.name}
+                  </span>
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
       </div>
     </div>
   );
