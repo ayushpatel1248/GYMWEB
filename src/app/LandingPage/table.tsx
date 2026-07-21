@@ -8,15 +8,22 @@ import { cn } from "@/lib/utils";
 
 interface StatusBadgeProps {
   status: boolean;
+  onClick?: () => void;
 }
 
-const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => (
-  <span
-    className={`px-3 py-1 rounded-full text-xs font-semibold 
-    ${status ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status, onClick }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    title={status ? "Click to mark as Unpaid" : "Click to mark as Paid"}
+    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all transform hover:scale-105 active:scale-95 cursor-pointer ${
+      status
+        ? "bg-green-100 hover:bg-green-200 text-green-800 border border-green-300 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
+        : "bg-red-100 hover:bg-red-200 text-red-800 border border-red-300 dark:bg-red-950 dark:text-red-300 dark:border-red-800"
+    }`}
   >
-    {status ? "Paid" : "Unpaid"}
-  </span>
+    {status ? "Paid ✓" : "Unpaid ✗"}
+  </button>
 );
 
 const Table = () => {
@@ -180,6 +187,49 @@ const Table = () => {
     fetchData();
   }, []);
 
+  const handleToggleFeeStatus = async (
+    id: string,
+    currentStatus: boolean,
+    name: string
+  ) => {
+    const newStatus = !currentStatus;
+    const actionText = newStatus ? "Paid" : "Unpaid";
+    const confirmMsg = `Mark ${name} as ${actionText}?${
+      !newStatus
+        ? " (If their membership is 30+ days expired, they will move to Non-Active)"
+        : ""
+    }`;
+
+    if (!window.confirm(confirmMsg)) return;
+
+    try {
+      const { error } = await supabase
+        .from("personList")
+        .update({ feesstatus: newStatus })
+        .eq("id", id);
+
+      if (error) {
+        console.error("Error updating status:", error);
+        alert("Failed to update status. Please try again.");
+        return;
+      }
+
+      // Update local state
+      setData((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, feesstatus: newStatus } : item
+        )
+      );
+      setFilteredData((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, feesstatus: newStatus } : item
+        )
+      );
+    } catch (err) {
+      console.error("Unexpected error updating status:", err);
+    }
+  };
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.toLowerCase();
     setSearchTerm(searchValue);
@@ -303,7 +353,12 @@ const Table = () => {
                       {row.plan}
                     </td>
                     <td className="px-4 py-4">
-                      <StatusBadge status={row.feesstatus} />
+                      <StatusBadge
+                        status={row.feesstatus}
+                        onClick={() =>
+                          handleToggleFeeStatus(row.id, row.feesstatus, row.fullName)
+                        }
+                      />
                     </td>
 
                     <td className="px-4 py-4">

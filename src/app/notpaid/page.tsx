@@ -146,12 +146,15 @@ const NotPaid = () => {
           })
         );
 
+        // Filter for members whose fees are unpaid for 1 month or less (overdue <= 30 days)
+        const recentUnpaidData = updatedData.filter((row) => row.remainingDays >= -30);
+
         // Sort by name within unpaid members
-        const sortedData = updatedData.sort((a, b) =>
+        const sortedData = recentUnpaidData.sort((a, b) =>
           a.fullName.localeCompare(b.fullName)
         );
 
-        setData(updatedData);
+        setData(recentUnpaidData);
         setFilteredData(sortedData);
       } catch (err) {
         console.error("Error fetching data:", err);

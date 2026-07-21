@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Home, Users, LogOut } from "lucide-react";
+import { Home, Users, UserX, LogOut } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -49,6 +49,12 @@ const BottomNavbar = () => {
       name: "NotPaid",
       link: "/notpaid",
       icon: Users,
+      onClick: undefined,
+    },
+    {
+      name: "Non Active",
+      link: "/non-active",
+      icon: UserX,
       onClick: undefined,
     },
     {
