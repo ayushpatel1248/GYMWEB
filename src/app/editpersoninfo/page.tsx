@@ -1,4 +1,6 @@
 "use client";
+export const dynamic = "force-dynamic";
+
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { Edit, Plus, Minus, Save } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
