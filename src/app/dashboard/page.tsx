@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Dashboard from "./dashboard";
 import BottomNavbar from "../LandingPage/bottom-navbar";
 import LandingPageHeader from "../LandingPage/header";
