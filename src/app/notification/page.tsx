@@ -182,10 +182,44 @@ const showNotification = async () => {
               row.plan
             );
             
-        // Add remainingDays and endDate to row data
-        row.remainingDays = remainingDays;
-        row.membershipEndDate = endDate;
-            
+            // Add remainingDays and endDate to row data
+            row.remainingDays = remainingDays;
+            row.membershipEndDate = endDate;
+
+            // Handle image processing for local UI
+            try {
+              if (row.imagePath) {
+                const { data: imageData, error: imageError } =
+                  await supabase.storage.from("gymweb").download(row.imagePath);
+
+                if (imageError) {
+                  console.error(
+                    `Error fetching image for ${row.id}:`,
+                    imageError
+                  );
+                  row.imageUrl = "";
+                } else {
+                  const imageUrl = URL.createObjectURL(imageData);
+                  row.imageUrl = imageUrl;
+                }
+
+                // Generate public/signed URL for push notification
+                const { data: signedData, error: signedError } =
+                  await supabase.storage.from("gymweb").createSignedUrl(row.imagePath, 604800); // 7 days
+                if (!signedError && signedData) {
+                  row.pushImageUrl = signedData.signedUrl;
+                } else {
+                  row.pushImageUrl = supabase.storage.from("gymweb").getPublicUrl(row.imagePath).data.publicUrl;
+                }
+              } else {
+                row.imageUrl = "";
+                row.pushImageUrl = "";
+              }
+            } catch (innerError) {
+              console.error(`Error processing row ${row.id}:`, innerError);
+              row.imageUrl = "";
+              row.pushImageUrl = "";
+            }
 
             return row;
           })
@@ -223,13 +257,13 @@ const showNotification = async () => {
         return;
       }
   
-     // Proceed with sending the notification
+      // Proceed with sending the notification
       dbdata.map(async(el)=>{
         if(el.remainingDays == 0){
           const data = await sendNotification(
-            `subscription end of ${el.fullName}`,
-            "",
-            "message"
+            `Subscription of ${el.fullName} is ending today.`,
+            el.pushImageUrl || "",
+            "Subscription Reminder"
           );
           console.log("Notification sent successfully:", data);
         }
@@ -293,8 +327,21 @@ const showNotification = async () => {
                       .map((user) => (
                         <li
                           key={user.id}
-                          className="flex justify-between items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-4"
+                          className="flex items-center gap-4 bg-gray-100 dark:bg-gray-700 rounded-lg p-4"
                         >
+                          {user.imageUrl ? (
+                            <img
+                              src={user.imageUrl}
+                              alt={user.fullName}
+                              className="w-12 h-12 rounded-full object-cover border-2 border-red-500"
+                            />
+                          ) : (
+                            <div className="w-12 h-12 bg-gray-200 dark:bg-zinc-800 rounded-full border-2 border-red-500 flex items-center justify-center">
+                              <span className="text-sm font-bold text-gray-500 dark:text-gray-400">
+                                {user.fullName.charAt(0)}
+                              </span>
+                            </div>
+                          )}
                           <div>
                             <h4 className="text-lg font-medium text-gray-800 dark:text-white">
                               {user.fullName}
@@ -303,7 +350,6 @@ const showNotification = async () => {
                               Subscription ends on {user.membershipEndDate}
                             </p>
                           </div>
-                         
                         </li>
                       ))}
                   </ul>

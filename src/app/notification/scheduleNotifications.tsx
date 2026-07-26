@@ -68,6 +68,23 @@ export const scheduleNotifications = () => {
           row.remainingDays = remainingDays;
           row.membershipEndDate = endDate;
 
+          // Generate public/signed URL for push notification
+          try {
+            if (row.imagePath) {
+              const { data: signedData, error: signedError } =
+                await supabase.storage.from("gymweb").createSignedUrl(row.imagePath, 604800); // 7 days
+              if (!signedError && signedData) {
+                row.pushImageUrl = signedData.signedUrl;
+              } else {
+                row.pushImageUrl = supabase.storage.from("gymweb").getPublicUrl(row.imagePath).data.publicUrl;
+              }
+            } else {
+              row.pushImageUrl = "";
+            }
+          } catch (e) {
+            row.pushImageUrl = "";
+          }
+
           return row;
         })
       );
@@ -88,7 +105,7 @@ export const scheduleNotifications = () => {
           try {
             await sendNotification(
               `Subscription of ${el.fullName} is ending today.`,
-              "",
+              el.pushImageUrl || "",
               "Subscription Reminder"
             );
             console.log(`Notification sent to ${el.fullName}`);
