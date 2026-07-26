@@ -27,6 +27,8 @@ const NonActiveMembers = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [activatingMember, setActivatingMember] = useState<{ id: string; fullName: string; doj: string } | null>(null);
+  const [newDoj, setNewDoj] = useState<string>("");
 
   const parsePlanMonths = (planString: string): number => {
     if (!planString) return 1;
@@ -152,18 +154,32 @@ const NonActiveMembers = () => {
     fetchData();
   }, []);
 
-  const handleActivateMember = async (id: string, name: string) => {
-    const confirmAction = window.confirm(
-      `Are you sure you want to move ${name} to Active Members? (Date of join will remain unchanged)`
-    );
-    if (!confirmAction) return;
+  const handleOpenActivateModal = (member: any) => {
+    setActivatingMember({
+      id: member.id,
+      fullName: member.fullName,
+      doj: member.doj
+    });
+    // Set default date to today's date formatted as YYYY-MM-DD in local time
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    setNewDoj(`${year}-${month}-${day}`);
+  };
+
+  const handleConfirmActivate = async () => {
+    if (!activatingMember) return;
 
     try {
-      // Update member feesstatus to true without changing their original doj
+      // Update both feesstatus to true and doj to the new date
       const { error } = await supabase
         .from("personList")
-        .update({ feesstatus: true })
-        .eq("id", id);
+        .update({ 
+          feesstatus: true,
+          doj: newDoj
+        })
+        .eq("id", activatingMember.id);
 
       if (error) {
         console.error("Error activating member:", error.message);
@@ -172,8 +188,9 @@ const NonActiveMembers = () => {
       }
 
       // Remove from local list so they disappear from non-active view
-      setData((prev) => prev.filter((member) => member.id !== id));
-      setFilteredData((prev) => prev.filter((member) => member.id !== id));
+      setData((prev) => prev.filter((member) => member.id !== activatingMember.id));
+      setFilteredData((prev) => prev.filter((member) => member.id !== activatingMember.id));
+      setActivatingMember(null);
     } catch (err) {
       console.error("Unexpected error activating member:", err);
     }
@@ -325,7 +342,7 @@ const NonActiveMembers = () => {
                             <div className="flex items-center gap-2">
                               <button
                                 onClick={() =>
-                                  handleActivateMember(row.id, row.fullName)
+                                  handleOpenActivateModal(row)
                                 }
                                 title="Move member to Active / Home"
                                 className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-md bg-green-100 hover:bg-green-200 dark:bg-green-950 dark:hover:bg-green-900 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-800 transition-all transform hover:scale-105 active:scale-95"
@@ -387,6 +404,58 @@ const NonActiveMembers = () => {
           </Link>
         </motion.div>
       </div>
+
+      {/* Activation Modal */}
+      <AnimatePresence>
+        {activatingMember && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="w-full max-w-md bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-2xl overflow-hidden"
+            >
+              <div className="p-6">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                  Activate Member
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                  You are moving <span className="font-semibold text-gray-800 dark:text-gray-200">{activatingMember.fullName}</span> back to active status. Set their new Date of Joining below.
+                </p>
+
+                <div className="space-y-4 mb-6">
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                      Date of Joining
+                    </label>
+                    <input
+                      type="date"
+                      value={newDoj}
+                      onChange={(e) => setNewDoj(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-black text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-3">
+                  <button
+                    onClick={() => setActivatingMember(null)}
+                    className="px-4 py-2 rounded-lg text-sm font-semibold border border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleConfirmActivate}
+                    className="px-4 py-2 rounded-lg text-sm font-semibold bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg transition-all"
+                  >
+                    Activate & Move to Home
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

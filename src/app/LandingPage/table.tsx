@@ -137,6 +137,9 @@ const Table = () => {
             // Add remainingDays and endDate to row data
             row.remainingDays = remainingDays;
             row.membershipEndDate = endDate;
+            if (remainingDays <= 0) {
+              row.feesstatus = false;
+            }
 
             // Handle image processing
             try {
@@ -166,7 +169,12 @@ const Table = () => {
           })
         );
 
-        const sortedData = updatedData.sort((a, b) => {
+        // Filter out non-active members (overdue by more than 30 days, i.e., remainingDays < -30)
+        const activeMembers = updatedData.filter(
+          (row) => !(row.feesstatus === false && row.remainingDays < -30)
+        );
+
+        const sortedData = activeMembers.sort((a, b) => {
           if (a.feesstatus === b.feesstatus) {
             // If status is the same, sort by name
             return a.fullName.localeCompare(b.fullName);
@@ -174,8 +182,8 @@ const Table = () => {
           // Put unpaid (false) before paid (true)
           return a.feesstatus ? 1 : -1;
         });
-        console.log("data", updatedData);
-        setData(updatedData);
+        console.log("data", activeMembers);
+        setData(activeMembers);
         setFilteredData(sortedData);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -214,16 +222,20 @@ const Table = () => {
         return;
       }
 
-      // Update local state
+      // Update local state and filter out non-active members if status changed to unpaid
       setData((prev) =>
-        prev.map((item) =>
-          item.id === id ? { ...item, feesstatus: newStatus } : item
-        )
+        prev
+          .map((item) =>
+            item.id === id ? { ...item, feesstatus: newStatus } : item
+          )
+          .filter((item) => !(item.feesstatus === false && item.remainingDays < -30))
       );
       setFilteredData((prev) =>
-        prev.map((item) =>
-          item.id === id ? { ...item, feesstatus: newStatus } : item
-        )
+        prev
+          .map((item) =>
+            item.id === id ? { ...item, feesstatus: newStatus } : item
+          )
+          .filter((item) => !(item.feesstatus === false && item.remainingDays < -30))
       );
     } catch (err) {
       console.error("Unexpected error updating status:", err);
