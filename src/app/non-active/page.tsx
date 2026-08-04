@@ -6,10 +6,11 @@ import { createClient } from "@/utils/supabase/client";
 import { useState, useEffect } from "react";
 import Loader from "@/components/ui/Loader";
 import { motion, AnimatePresence } from "framer-motion";
-import { SearchIcon, PlusIcon, UserX, UserCheck } from "lucide-react";
+import { SearchIcon, PlusIcon, UserX, UserCheck, Loader2 } from "lucide-react";
 import React from "react";
 import BottomNavbar from "../LandingPage/bottom-navbar";
 import LandingPageHeader from "../LandingPage/header";
+import { generateAndUploadInvoice, InvoiceData } from "@/components/invoicegenerator";
 
 interface StatusBadgeProps {
   status: string;
@@ -27,8 +28,13 @@ const NonActiveMembers = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [activatingMember, setActivatingMember] = useState<{ id: string; fullName: string; doj: string } | null>(null);
+  const [activatingMember, setActivatingMember] = useState<any | null>(null);
   const [newDoj, setNewDoj] = useState<string>("");
+  const [selectedPlan, setSelectedPlan] = useState<string>("1 Month");
+  const [totalFees, setTotalFees] = useState<string>("");
+  const [paymentMode, setPaymentMode] = useState<"cash" | "upi">("cash");
+  const [isActivating, setIsActivating] = useState<boolean>(false);
+  const [feesPaid, setFeesPaid] = useState<boolean>(true);
 
   const parsePlanMonths = (planString: string): number => {
     if (!planString) return 1;
@@ -155,11 +161,12 @@ const NonActiveMembers = () => {
   }, []);
 
   const handleOpenActivateModal = (member: any) => {
-    setActivatingMember({
-      id: member.id,
-      fullName: member.fullName,
-      doj: member.doj
-    });
+    setActivatingMember(member);
+    setSelectedPlan(member.plan || "1 Month");
+    setTotalFees(member.totalfees?.toString() || "");
+    setPaymentMode("cash");
+    setFeesPaid(true);
+
     // Set default date to today's date formatted as YYYY-MM-DD in local time
     const today = new Date();
     const year = today.getFullYear();
@@ -170,15 +177,87 @@ const NonActiveMembers = () => {
 
   const handleConfirmActivate = async () => {
     if (!activatingMember) return;
+    setIsActivating(true);
 
     try {
-      // Update both feesstatus to true and doj to the new date
+      let updatePayload: any = {};
+
+      if (feesPaid) {
+        // Calculate validUntil date based on selected plan
+        const joinDate = new Date(newDoj);
+        const validUntil = new Date(joinDate);
+        switch (selectedPlan) {
+          case "1 Month":
+            validUntil.setMonth(validUntil.getMonth() + 1);
+            break;
+          case "3 Month":
+            validUntil.setMonth(validUntil.getMonth() + 3);
+            break;
+          case "6 Month":
+            validUntil.setMonth(validUntil.getMonth() + 6);
+            break;
+          case "12 Month":
+            validUntil.setFullYear(validUntil.getFullYear() + 1);
+            break;
+          default:
+            break;
+        }
+
+        // Generate invoice
+        const invoiceData: InvoiceData = {
+          customerName: activatingMember.fullName,
+          mobileNumber: activatingMember.mobileNumber || "",
+          amount: Number(totalFees) || 0,
+          paymentMode: paymentMode,
+          planDuration: selectedPlan,
+          validFrom: newDoj,
+          validUntil: validUntil.toISOString().split("T")[0],
+          invoiceNumber: `INV-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        };
+
+        let invoiceUrl = "";
+        try {
+          invoiceUrl = await generateAndUploadInvoice(invoiceData);
+        } catch (invoiceErr) {
+          console.error("Error generating/uploading invoice:", invoiceErr);
+        }
+
+        // Create new transaction
+        const newTransaction = {
+          paymentDate: newDoj,
+          mode: paymentMode,
+          validUntil: validUntil.toISOString().split("T")[0],
+          amount: Number(totalFees) || 0,
+          invoiceUrl,
+        };
+
+        const currentTransactions = Array.isArray(activatingMember.transaction)
+          ? activatingMember.transaction
+          : [];
+
+        const updatedTransactions = [...currentTransactions, newTransaction];
+
+        updatePayload = {
+          feesstatus: true,
+          doj: newDoj,
+          plan: selectedPlan,
+          totalfees: Number(totalFees) || 0,
+          transaction: updatedTransactions
+        };
+      } else {
+        // Unpaid reactivation
+        updatePayload = {
+          feesstatus: false,
+          doj: newDoj,
+          plan: "0 Month",
+          totalfees: Number(totalFees) || 0
+        };
+      }
+
+      // Update both feesstatus to true, new doj, plan, totalfees and transaction history in DB
       const { error } = await supabase
         .from("personList")
-        .update({ 
-          feesstatus: true,
-          doj: newDoj
-        })
+        .update(updatePayload)
         .eq("id", activatingMember.id);
 
       if (error) {
@@ -193,6 +272,9 @@ const NonActiveMembers = () => {
       setActivatingMember(null);
     } catch (err) {
       console.error("Unexpected error activating member:", err);
+      alert("An error occurred during activation. Please try again.");
+    } finally {
+      setIsActivating(false);
     }
   };
 
@@ -416,14 +498,15 @@ const NonActiveMembers = () => {
               className="w-full max-w-md bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-2xl overflow-hidden"
             >
               <div className="p-6">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
                   Activate Member
                 </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                  You are moving <span className="font-semibold text-gray-800 dark:text-gray-200">{activatingMember.fullName}</span> back to active status. Set their new Date of Joining below.
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+                  Moving <span className="font-semibold text-gray-800 dark:text-gray-200">{activatingMember.fullName}</span> to active status. Configure their membership options below.
                 </p>
 
                 <div className="space-y-4 mb-6">
+                  {/* Date of Joining */}
                   <div className="space-y-1">
                     <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
                       Date of Joining
@@ -435,20 +518,113 @@ const NonActiveMembers = () => {
                       className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-black text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                     />
                   </div>
+
+                  {/* Fees Paid or Not Toggle */}
+                  <div className="flex items-center justify-between py-2 border-b dark:border-zinc-800">
+                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                      Fees Paid or Not
+                    </span>
+                    <label className="inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={feesPaid}
+                        onChange={(e) => setFeesPaid(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="relative w-11 h-6 bg-gray-200 dark:bg-zinc-800 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full dark:border-zinc-600"></div>
+                    </label>
+                  </div>
+
+                  {feesPaid && (
+                    <>
+                      {/* Membership Plan */}
+                      <div className="space-y-1 animate-fadeIn">
+                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                          Membership Plan
+                        </label>
+                        <div className="grid grid-cols-2 gap-2 mt-1">
+                          {["1 Month", "3 Month", "6 Month", "12 Month"].map((planOption) => (
+                            <button
+                              key={planOption}
+                              type="button"
+                              onClick={() => setSelectedPlan(planOption)}
+                              className={`px-3 py-2 text-xs font-medium rounded-lg border transition-all ${
+                                selectedPlan === planOption
+                                  ? "bg-blue-600 border-blue-600 text-white shadow-md font-bold"
+                                  : "border-gray-200 dark:border-zinc-800 text-gray-700 dark:text-gray-300 bg-white dark:bg-black hover:bg-gray-50 dark:hover:bg-zinc-900"
+                              }`}
+                            >
+                              {planOption}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Total Fees */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                      {feesPaid ? "Total Fees Paid (₹)" : "Fees Amount to Pay (₹)"}
+                    </label>
+                    <input
+                      type="number"
+                      value={totalFees}
+                      onChange={(e) => setTotalFees(e.target.value)}
+                      placeholder="Enter amount"
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-black text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm font-semibold"
+                    />
+                  </div>
+
+                  {feesPaid && (
+                    <>
+                      {/* Payment Mode */}
+                      <div className="space-y-1 animate-fadeIn">
+                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">
+                          Payment Mode
+                        </label>
+                        <div className="flex gap-2">
+                          {(["cash", "upi"] as const).map((mode) => (
+                            <button
+                              key={mode}
+                              type="button"
+                              onClick={() => setPaymentMode(mode)}
+                              className={`flex-1 py-2 text-xs font-bold uppercase rounded-lg border transition-all ${
+                                paymentMode === mode
+                                  ? "bg-emerald-600 border-emerald-600 text-white shadow-sm"
+                                  : "border-gray-200 dark:border-zinc-800 text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-900"
+                              }`}
+                            >
+                              {mode}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
 
-                <div className="flex items-center justify-end gap-3">
+                <div className="flex items-center justify-end gap-3 border-t dark:border-zinc-800 pt-4">
                   <button
                     onClick={() => setActivatingMember(null)}
-                    className="px-4 py-2 rounded-lg text-sm font-semibold border border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors"
+                    disabled={isActivating}
+                    className="px-4 py-2 rounded-lg text-sm font-semibold border border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors disabled:opacity-50"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleConfirmActivate}
-                    className="px-4 py-2 rounded-lg text-sm font-semibold bg-green-600 hover:bg-green-700 text-white shadow-md hover:shadow-lg transition-all"
+                    disabled={isActivating}
+                    className="px-4 py-2 rounded-lg text-sm font-semibold bg-green-600 hover:bg-green-700 disabled:bg-gray-300 dark:disabled:bg-zinc-800 text-white shadow-md hover:shadow-lg transition-all flex items-center gap-2"
                   >
-                    Activate & Move to Home
+                    {isActivating ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Activating...</span>
+                      </>
+                    ) : (
+                      <span>Activate & Move to Home</span>
+                    )}
                   </button>
                 </div>
               </div>

@@ -310,7 +310,7 @@ const showNotification = async () => {
 
           {permit == "granted" && (
             <AnimatePresence>
-              {dbdata.filter((user) => user.remainingDays === 0).length > 0 && (
+              {dbdata.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -323,7 +323,6 @@ const showNotification = async () => {
                   </h3>
                   <ul className="space-y-2">
                     {dbdata
-                      .filter((user) => user.remainingDays === 0)
                       .map((user) => (
                         <li
                           key={user.id}
